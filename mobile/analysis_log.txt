@@ -1,0 +1,17 @@
+Analyzing mobile...                                             
+
+  error - Undefined name 'AppTheme' - lib\features\citizen\screens\citizen_nav_wrapper.dart:52:37 - undefined_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_nav_wrapper.dart:60:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_nav_wrapper.dart:64:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_profile_screen.dart:130:32 - deprecated_member_use
+   info - 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor or activeTrackColor instead. This feature was deprecated after v3.31.0-2.0.pre - lib\features\citizen\screens\citizen_profile_screen.dart:164:27 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_profile_screen.dart:165:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_profile_screen.dart:218:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_profile_screen.dart:244:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_profile_screen.dart:290:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_provider_detail_screen.dart:117:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_provider_detail_screen.dart:191:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_provider_detail_screen.dart:225:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\citizen\screens\citizen_provider_detail_screen.dart:304:33 - deprecated_member_use
+
+13 issues found. (ran in 1.6s)

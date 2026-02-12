@@ -104,21 +104,96 @@ class CitizenProfileScreen extends StatelessWidget {
                       AppTheme.deepBlue),
                   _buildProfileTile(Icons.language_rounded, "Language",
                       "Nepali / English", Colors.purple),
-                  
+
                   const SizedBox(height: 32),
-                   const Text("Account Settings",
+                  const Text("Switch Role",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.darkText)),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: appState.isProviderMode
+                            ? [AppTheme.success, Colors.teal]
+                            : [AppTheme.deepBlue, AppTheme.crimson],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: (appState.isProviderMode
+                                  ? AppTheme.success
+                                  : AppTheme.crimson)
+                              .withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              appState.isProviderMode
+                                  ? Icons.work_rounded
+                                  : Icons.person_search_rounded,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                appState.isProviderMode
+                                    ? "Working Mode"
+                                    : "Hiring Mode",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        Switch.adaptive(
+                          value: appState.isProviderMode,
+                          onChanged: (val) => appState.toggleProviderMode(),
+                          activeThumbColor: Colors.white,
+                          activeTrackColor: Colors.white.withValues(alpha: 0.3),
+                        ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          appState.isProviderMode
+                              ? "You are currently discovering jobs and managing your services."
+                              : "You are currently browsing services and hiring providers.",
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+                  const Text("Account Settings",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppTheme.darkText)),
                   const SizedBox(height: 16),
 
-                  _buildActionTile(Icons.lock_outline_rounded, "Change Password",
-                      () {}),
-                  _buildActionTile(Icons.notifications_outlined, "Notifications",
-                      () {}),
-                  _buildActionTile(Icons.help_outline_rounded, "Help & Support",
-                      () {}),
+                  _buildActionTile(
+                      Icons.lock_outline_rounded, "Change Password", () {}),
+                  _buildActionTile(
+                      Icons.notifications_outlined, "Notifications", () {}),
+                  _buildActionTile(
+                      Icons.help_outline_rounded, "Help & Support", () {}),
 
                   const SizedBox(height: 40),
                   SizedBox(
@@ -129,7 +204,8 @@ class CitizenProfileScreen extends StatelessWidget {
                         appState.logout();
                         Navigator.pushReplacementNamed(context, '/');
                       },
-                      icon: const Icon(Icons.logout_rounded, color: Colors.white),
+                      icon: const Icon(Icons.logout_rounded,
+                          color: Colors.white),
                       label: const Text("Logout",
                           style: TextStyle(
                               color: Colors.white,
@@ -138,7 +214,8 @@ class CitizenProfileScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.crimson,
                         elevation: 4,
-                        shadowColor: AppTheme.crimson.withValues(alpha: 0.4),
+                        shadowColor:
+                            AppTheme.crimson.withValues(alpha: 0.4),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16)),
                       ),

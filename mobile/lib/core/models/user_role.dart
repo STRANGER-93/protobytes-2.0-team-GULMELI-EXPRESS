@@ -112,3 +112,39 @@ class AnalyticsStat {
     this.changePercent = 0,
   });
 }
+
+class InfrastructureReport {
+  final String id;
+  final String title;
+  final String description;
+  final String status; // pending, in_progress, resolved
+  final String date;
+  final String location;
+  final String reporterName;
+
+  const InfrastructureReport({
+    required this.id,
+    required this.title,
+    required this.description,
+    this.status = 'pending',
+    required this.date,
+    required this.location,
+    required this.reporterName,
+  });
+}
+
+class Announcement {
+  final String id;
+  final String title;
+  final String content;
+  final String date;
+  final String target; // all, citizens, providers
+
+  const Announcement({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.date,
+    this.target = 'all',
+  });
+}

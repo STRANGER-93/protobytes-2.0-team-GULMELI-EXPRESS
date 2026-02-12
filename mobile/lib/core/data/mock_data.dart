@@ -204,4 +204,72 @@ class MockData {
     AnalyticsStat(label: 'Revenue (Rs.)', value: '9,300', icon: 'account_balance_wallet', changePercent: 5),
     AnalyticsStat(label: 'Pending Approvals', value: '2', icon: 'pending_actions', changePercent: -10),
   ];
+
+  static const allUsers = [
+    citizenUser,
+    AppUser(
+      id: 'c2',
+      name: 'Ram Bir',
+      role: UserRole.citizen,
+      location: 'Ward 2, Kathmandu',
+      walletBalance: 1200,
+      email: 'rambir@example.com',
+    ),
+    AppUser(
+      id: 'c3',
+      name: 'Sita Maya',
+      role: UserRole.citizen,
+      location: 'Ward 5, Lalitpur',
+      walletBalance: 4500,
+      email: 'sitamaya@example.com',
+    ),
+    governmentUser,
+  ];
+
+  static const reports = [
+    InfrastructureReport(
+      id: 'r1',
+      title: 'Broken Water Pipe',
+      description: 'Major leak in the main line near the ward office. Water is flooding the street.',
+      location: 'Ward 1, Main Road',
+      reporterName: 'Abdhesh',
+      date: '2026-02-10',
+      status: 'pending',
+    ),
+    InfrastructureReport(
+      id: 'r2',
+      title: 'Pothole on Bridge',
+      description: 'Large pothole on the Bagmati bridge, dangerous for two-wheelers.',
+      location: 'Bagmati Bridge, Kupandole',
+      reporterName: 'Ram Bir',
+      date: '2026-02-11',
+      status: 'in_progress',
+    ),
+    InfrastructureReport(
+      id: 'r3',
+      title: 'Streetlight Not Working',
+      description: 'The streetlights in the inner alley are dark since 3 days.',
+      location: 'Lalitpur-5, Alley 4',
+      reporterName: 'Sita Maya',
+      date: '2026-02-12',
+      status: 'resolved',
+    ),
+  ];
+
+  static const recentAnnouncements = [
+    Announcement(
+      id: 'a1',
+      title: 'Vaccination Drive',
+      content: 'Mass vaccination drive for children under 5 starting next week at ward offices.',
+      date: '2026-02-10',
+      target: 'all',
+    ),
+    Announcement(
+      id: 'a2',
+      title: 'New Service Provider Fees',
+      content: 'Service charge for providers has been reduced to 5% to encourage local business.',
+      date: '2026-02-12',
+      target: 'providers',
+    ),
+  ];
 }

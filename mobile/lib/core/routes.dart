@@ -8,9 +8,9 @@ import '../features/citizen/screens/citizen_provider_list_screen.dart';
 import '../features/citizen/screens/citizen_provider_detail_screen.dart';
 import '../features/citizen/screens/citizen_bookings_screen.dart';
 import '../features/citizen/screens/citizen_profile_screen.dart';
-import '../features/government/screens/gov_dashboard_screen.dart';
-import '../features/government/screens/gov_provider_management_screen.dart';
-import '../features/government/screens/gov_booking_management_screen.dart';
+import '../features/government/screens/gov_user_management_screen.dart';
+import '../features/government/screens/gov_report_management_screen.dart';
+import '../features/government/screens/gov_announcement_screen.dart';
 import '../features/government/screens/gov_training_management_screen.dart';
 import '../features/government/screens/gov_analytics_screen.dart';
 import 'state/app_state.dart';
@@ -74,6 +74,15 @@ class AppRoutes {
       case '/gov/analytics':
         if (role != UserRole.government) return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const GovAnalyticsScreen());
+      case '/gov/users':
+        if (role != UserRole.government) return _accessDenied(settings);
+        return MaterialPageRoute(builder: (_) => const GovUserManagementScreen());
+      case '/gov/reports':
+        if (role != UserRole.government) return _accessDenied(settings);
+        return MaterialPageRoute(builder: (_) => const GovReportManagementScreen());
+      case '/gov/announcements':
+        if (role != UserRole.government) return _accessDenied(settings);
+        return MaterialPageRoute(builder: (_) => const GovAnnouncementScreen());
 
       default:
         return _notFound(settings);

@@ -21,22 +21,35 @@ class AppStateProvider extends StatefulWidget {
 
 class AppStateProviderState extends State<AppStateProvider> {
   AppUser? _currentUser;
+  bool _isProviderMode = false; // "Work" mode
 
   AppUser? get currentUser => _currentUser;
   bool get isLoggedIn => _currentUser != null;
   bool get isCitizen => _currentUser?.role == UserRole.citizen;
   bool get isGovernment => _currentUser?.role == UserRole.government;
+  bool get isProviderMode => _isProviderMode;
 
   void loginAs(UserRole role) {
     setState(() {
       _currentUser = role == UserRole.citizen
           ? MockData.citizenUser
           : MockData.governmentUser;
+      // Reset mode on login
+      _isProviderMode = false;
     });
   }
 
   void logout() {
-    setState(() => _currentUser = null);
+    setState(() {
+      _currentUser = null;
+      _isProviderMode = false;
+    });
+  }
+
+  void toggleProviderMode() {
+    setState(() {
+      _isProviderMode = !_isProviderMode;
+    });
   }
 
   @override

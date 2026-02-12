@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/state/app_state.dart';
+import '../../../shared/theme/app_theme.dart';
 import 'citizen_dashboard_screen.dart';
 import 'citizen_course_list_screen.dart';
 import 'citizen_provider_list_screen.dart';
@@ -16,7 +17,8 @@ class CitizenNavWrapper extends StatefulWidget {
 class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
   int _selectedIndex = 0;
 
-  final _screens = const [
+  // Citizen Screens (Hire Mode)
+  final _citizenScreens = const [
     CitizenDashboardScreen(),
     CitizenCourseListScreen(),
     CitizenProviderListScreen(),
@@ -24,19 +26,35 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
     CitizenProfileScreen(),
   ];
 
+  // Provider Screens (Work Mode)
+  // TODO: Replace placeholders with actual provider screens when available
+  final _providerScreens = const [
+    Scaffold(body: Center(child: Text("Provider Dashboard (Coming Soon)"))),
+    Scaffold(body: Center(child: Text("My Services (Coming Soon)"))),
+    Scaffold(body: Center(child: Text("Service Requests (Coming Soon)"))),
+    Scaffold(body: Center(child: Text("Earnings (Coming Soon)"))),
+    CitizenProfileScreen(), // Profile is shared to allow switching back
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final appState = AppStateProvider.of(context);
+
     // Guard: if somehow a non-citizen accesses this, kick them out
-    if (!AppStateProvider.of(context).isCitizen) {
+    if (!appState.isCitizen) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/');
       });
       return const SizedBox.shrink();
     }
 
+    final isProvider = appState.isProviderMode;
+    final screens = isProvider ? _providerScreens : _citizenScreens;
+    final themeColor = isProvider ? AppTheme.success : Colors.indigo;
+
     return Scaffold(
       extendBody: true,
-      body: _screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -60,15 +78,35 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
             elevation: 0,
             showSelectedLabels: true,
             showUnselectedLabels: false,
-            selectedItemColor: Colors.indigo,
+            selectedItemColor: themeColor,
             unselectedItemColor: Colors.grey.shade400,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
-              BottomNavigationBarItem(icon: Icon(Icons.school), label: "Courses"),
-              BottomNavigationBarItem(icon: Icon(Icons.storefront), label: "Services"),
-              BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "Bookings"),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-            ],
+            items: isProvider
+                ? const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.dashboard_rounded), label: "Work"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.list_alt_rounded), label: "Services"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications_active_rounded),
+                        label: "Requests"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.account_balance_wallet_rounded),
+                        label: "Earnings"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.person_rounded), label: "Profile"),
+                  ]
+                : const [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home_filled), label: "Home"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.school), label: "Courses"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.storefront), label: "Services"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.calendar_month), label: "Bookings"),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.person), label: "Profile"),
+                  ],
           ),
         ),
       ),
