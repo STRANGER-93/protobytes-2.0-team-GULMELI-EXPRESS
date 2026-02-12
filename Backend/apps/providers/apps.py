@@ -1,5 +1,10 @@
+# backend/apps/providers/apps.py
 from django.apps import AppConfig
 
 
 class ProvidersConfig(AppConfig):
-    name = 'providers'
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.providers'
+    
+    def ready(self):
+        import apps.providers.signals
