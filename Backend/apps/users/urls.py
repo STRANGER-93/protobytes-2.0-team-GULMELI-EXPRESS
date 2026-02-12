@@ -1,4 +1,4 @@
-# backend/apps/users/urls.py
+# backend/apps/users/urls.py (UPDATE - replace existing)
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
@@ -13,4 +13,5 @@ urlpatterns = [
     
     # User profile
     path('me/', views.CurrentUserView.as_view(), name='current-user'),
+    path('profile/', views.UserProfileView.as_view(), name='profile'),
 ]
