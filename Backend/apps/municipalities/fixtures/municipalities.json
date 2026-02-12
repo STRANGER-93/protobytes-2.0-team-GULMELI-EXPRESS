@@ -1,0 +1,92 @@
+[
+  {
+    "model": "municipalities.municipality",
+    "pk": 1,
+    "fields": {
+      "name": "Kathmandu Metropolitan",
+      "district": "Kathmandu",
+      "province": "Bagmati"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 2,
+    "fields": {
+      "name": "Lalitpur Metropolitan",
+      "district": "Lalitpur",
+      "province": "Bagmati"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 3,
+    "fields": {
+      "name": "Bhaktapur Municipality",
+      "district": "Bhaktapur",
+      "province": "Bagmati"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 4,
+    "fields": {
+      "name": "Pokhara Metropolitan",
+      "district": "Kaski",
+      "province": "Gandaki"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 5,
+    "fields": {
+      "name": "Biratnagar Metropolitan",
+      "district": "Morang",
+      "province": "Koshi"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 6,
+    "fields": {
+      "name": "Dharan Sub-Metropolitan",
+      "district": "Sunsari",
+      "province": "Koshi"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 7,
+    "fields": {
+      "name": "Bharatpur Metropolitan",
+      "district": "Chitwan",
+      "province": "Bagmati"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 8,
+    "fields": {
+      "name": "Birgunj Metropolitan",
+      "district": "Parsa",
+      "province": "Madhesh"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 9,
+    "fields": {
+      "name": "Hetauda Sub-Metropolitan",
+      "district": "Makwanpur",
+      "province": "Bagmati"
+    }
+  },
+  {
+    "model": "municipalities.municipality",
+    "pk": 10,
+    "fields": {
+      "name": "Butwal Sub-Metropolitan",
+      "district": "Rupandehi",
+      "province": "Lumbini"
+    }
+  }
+]
