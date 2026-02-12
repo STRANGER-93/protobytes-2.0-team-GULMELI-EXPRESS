@@ -1,5 +1,10 @@
+# backend/apps/reviews/apps.py
 from django.apps import AppConfig
 
 
 class ReviewsConfig(AppConfig):
-    name = 'reviews'
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.reviews'
+    
+    def ready(self):
+        import apps.reviews.signals
