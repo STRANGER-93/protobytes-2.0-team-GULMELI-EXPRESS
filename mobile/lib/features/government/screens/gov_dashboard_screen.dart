@@ -4,62 +4,117 @@ import '../../../core/state/app_state.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../widgets/stat_card.dart';
 
-class GovDashboardScreen extends StatelessWidget {
+class GovDashboardScreen extends StatefulWidget {
   const GovDashboardScreen({super.key});
+
+  @override
+  State<GovDashboardScreen> createState() => _GovDashboardScreenState();
+}
+
+class _GovDashboardScreenState extends State<GovDashboardScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = AppStateProvider.of(context).currentUser!;
-    final analytics = MockData.analytics;
     final pendingCount =
         MockData.providers.where((p) => !p.isApproved).length;
     final pendingBookings =
         MockData.bookings.where((b) => b.status == 'pending').length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F2F5),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Header ──
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: AppTheme.offWhite,
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // ── Header Section ──
+            SliverToBoxAdapter(
+              child: Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Government Portal",
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                              color: AppTheme.darkText)),
-                      Text("Welcome, ${user.name}",
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade600)),
-                    ],
+                  Container(
+                    height: 200,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppTheme.deepBlue, AppTheme.crimson],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                    ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      AppStateProvider.of(context).logout();
-                      Navigator.pushReplacementNamed(context, '/');
-                    },
-                    icon: const Icon(Icons.logout, color: AppTheme.crimson),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 50.0, left: 20, right: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Government Portal",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium
+                                        ?.copyWith(color: Colors.white)),
+                                const SizedBox(height: 4),
+                                Text("Welcome, ${user.name}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(color: Colors.white70)),
+                              ],
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                AppStateProvider.of(context).logout();
+                                Navigator.pushReplacementNamed(context, '/');
+                              },
+                              icon: const Icon(Icons.logout,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        // ── Stats Grid Inside Header Overflow ──
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-
-              // ── Stats Grid ──
-              GridView.count(
+            ),
+            
+            // ── Stats Grid ──
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 0),
+              sliver: SliverGrid.count(
                 crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.5,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.4,
                 children: [
                   StatCard(
                     label: "Total Providers",
@@ -72,7 +127,7 @@ class GovDashboardScreen extends StatelessWidget {
                     label: "Active Bookings",
                     value: "${MockData.bookings.length}",
                     icon: Icons.calendar_today,
-                    color: Colors.green,
+                    color: AppTheme.success,
                     changePercent: 8,
                   ),
                   StatCard(
@@ -86,64 +141,88 @@ class GovDashboardScreen extends StatelessWidget {
                     label: "Pending Approvals",
                     value: "$pendingCount",
                     icon: Icons.pending_actions,
-                    color: Colors.orange,
+                    color: AppTheme.warning,
                     changePercent: -10,
                   ),
                 ],
               ),
-              const SizedBox(height: 28),
+            ),
 
-              // ── Quick Actions ──
-              const Text("Quick Actions",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.darkText)),
-              const SizedBox(height: 12),
-              _actionTile(
-                context,
-                Icons.people_alt,
-                "Provider Management",
-                "$pendingCount pending approvals",
-                AppTheme.deepBlue,
-                () => Navigator.pushNamed(context, '/gov/providers'),
+            // ── Quick Actions Header ──
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                child: Text("Quick Actions",
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
-              _actionTile(
-                context,
-                Icons.calendar_month,
-                "Booking Management",
-                "$pendingBookings pending bookings",
-                Colors.green,
-                () => Navigator.pushNamed(context, '/gov/bookings'),
-              ),
-              _actionTile(
-                context,
-                Icons.school,
-                "Training Programs",
-                "${MockData.courses.length} active courses",
-                Colors.purple,
-                () => Navigator.pushNamed(context, '/gov/training'),
-              ),
-              _actionTile(
-                context,
-                Icons.bar_chart,
-                "Analytics",
-                "View system statistics",
-                Colors.teal,
-                () => Navigator.pushNamed(context, '/gov/analytics'),
-              ),
-              const SizedBox(height: 28),
+            ),
 
-              // ── Recent Activity ──
-              const Text("Recent Activity",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.darkText)),
-              const SizedBox(height: 12),
-              ...MockData.bookings.take(3).map((b) => _activityTile(b)),
-            ],
-          ),
+            // ── Quick Actions List ──
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  _actionTile(
+                    context,
+                    Icons.people_alt,
+                    "Provider Management",
+                    "$pendingCount pending approvals",
+                    AppTheme.deepBlue,
+                    () => Navigator.pushNamed(context, '/gov/providers'),
+                  ),
+                  _actionTile(
+                    context,
+                    Icons.calendar_month,
+                    "Booking Management",
+                    "$pendingBookings pending bookings",
+                    AppTheme.success,
+                    () => Navigator.pushNamed(context, '/gov/bookings'),
+                  ),
+                  _actionTile(
+                    context,
+                    Icons.school,
+                    "Training Programs",
+                    "${MockData.courses.length} active courses",
+                    Colors.purple,
+                    () => Navigator.pushNamed(context, '/gov/training'),
+                  ),
+                  _actionTile(
+                    context,
+                    Icons.bar_chart,
+                    "Analytics",
+                    "View system statistics",
+                    Colors.teal,
+                    () => Navigator.pushNamed(context, '/gov/analytics'),
+                  ),
+                ]),
+              ),
+            ),
+
+            // ── Recent Activity Header ──
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                child: Text("Recent Activity",
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+            ),
+
+            // ── Recent Activity List ──
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final booking = MockData.bookings[index];
+                    return _activityTile(booking);
+                  },
+                  childCount: MockData.bookings.take(5).length,
+                ),
+              ),
+            ),
+            
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
+          ],
         ),
       ),
     );
@@ -151,41 +230,58 @@ class GovDashboardScreen extends StatelessWidget {
 
   Widget _actionTile(BuildContext context, IconData icon, String title,
       String subtitle, Color color, VoidCallback onTap) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: color, size: 24),
                 ),
-                child: Icon(icon, color: color, size: 22),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16)),
-                    Text(subtitle,
-                        style: TextStyle(
-                            fontSize: 13, color: Colors.grey.shade600)),
-                  ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppTheme.darkText)),
+                      const SizedBox(height: 4),
+                      Text(subtitle,
+                          style: TextStyle(
+                              fontSize: 13, color: AppTheme.grey)),
+                    ],
+                  ),
                 ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-            ],
+                const Icon(Icons.arrow_forward_ios_rounded,
+                    size: 16, color: AppTheme.grey),
+              ],
+            ),
           ),
         ),
       ),
@@ -194,24 +290,55 @@ class GovDashboardScreen extends StatelessWidget {
 
   Widget _activityTile(dynamic b) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.circle, size: 8, color: AppTheme.deepBlue),
-          const SizedBox(width: 10),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Icon(Icons.circle, size: 10, color: AppTheme.deepBlue),
+          ),
+          const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              "${b.citizenName} booked ${b.serviceName} from ${b.providerName}",
-              style: const TextStyle(fontSize: 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(fontSize: 14, color: AppTheme.darkText),
+                    children: [
+                      TextSpan(
+                          text: b.citizenName,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " booked "),
+                      TextSpan(
+                          text: b.serviceName,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: " from "),
+                      TextSpan(
+                          text: b.providerName,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(b.date,
+                    style: const TextStyle(fontSize: 12, color: AppTheme.grey)),
+              ],
             ),
           ),
-          Text(b.date,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
         ],
       ),
     );

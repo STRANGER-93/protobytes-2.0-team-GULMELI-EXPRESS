@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/data/mock_data.dart';
-import '../../../core/models/user_role.dart';
 import '../../../shared/theme/app_theme.dart';
 
 class CitizenProviderDetailScreen extends StatelessWidget {

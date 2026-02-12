@@ -12,90 +12,239 @@ class CitizenProfileScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.offWhite,
-      appBar: AppBar(
-        title: const Text("My Profile"),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // Avatar
-            CircleAvatar(
-              radius: 48,
-              backgroundColor: AppTheme.deepBlue.withValues(alpha: 0.1),
-              child: Text(user.name[0].toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 38,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.deepBlue)),
-            ),
-            const SizedBox(height: 16),
-            Text(user.name,
-                style: const TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.bold)),
-            Text(user.email,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
-            Text(user.location,
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade500)),
-            const SizedBox(height: 32),
-
-            _profileTile(Icons.account_balance_wallet, "Wallet",
-                "Rs. ${user.walletBalance.toInt()}"),
-            _profileTile(Icons.location_on, "Location", user.location),
-            _profileTile(Icons.email, "Email", user.email),
-            _profileTile(Icons.language, "Language", "Nepali / English"),
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  appState.logout();
-                  Navigator.pushReplacementNamed(context, '/');
-                },
-                icon: const Icon(Icons.logout, color: AppTheme.crimson),
-                label: const Text("Logout",
-                    style: TextStyle(color: AppTheme.crimson)),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppTheme.crimson),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                ),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 280.0,
+            floating: false,
+            pinned: true,
+            backgroundColor: AppTheme.deepBlue,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [AppTheme.deepBlue, AppTheme.crimson],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 80,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: AppTheme.offWhite,
+                            child: Text(
+                              user.name[0].toUpperCase(),
+                              style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.deepBlue),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(user.name,
+                            style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        const SizedBox(height: 4),
+                        Text(user.email,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white70)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Personal Information",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.darkText)),
+                  const SizedBox(height: 16),
+                  _buildProfileTile(
+                      Icons.account_balance_wallet_rounded,
+                      "Wallet Balance",
+                      "Rs. ${user.walletBalance.toInt()}",
+                      AppTheme.success),
+                  _buildProfileTile(Icons.location_on_rounded, "Location",
+                      user.location, AppTheme.deepBlue),
+                  _buildProfileTile(Icons.email_rounded, "Email", user.email,
+                      AppTheme.deepBlue),
+                  _buildProfileTile(Icons.language_rounded, "Language",
+                      "Nepali / English", Colors.purple),
+                  
+                  const SizedBox(height: 32),
+                   const Text("Account Settings",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.darkText)),
+                  const SizedBox(height: 16),
+
+                  _buildActionTile(Icons.lock_outline_rounded, "Change Password",
+                      () {}),
+                  _buildActionTile(Icons.notifications_outlined, "Notifications",
+                      () {}),
+                  _buildActionTile(Icons.help_outline_rounded, "Help & Support",
+                      () {}),
+
+                  const SizedBox(height: 40),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        appState.logout();
+                        Navigator.pushReplacementNamed(context, '/');
+                      },
+                      icon: const Icon(Icons.logout_rounded, color: Colors.white),
+                      label: const Text("Logout",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.crimson,
+                        elevation: 4,
+                        shadowColor: AppTheme.crimson.withValues(alpha: 0.4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _profileTile(IconData icon, String label, String value) {
+  Widget _buildProfileTile(
+      IconData icon, String label, String value, Color color) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2)),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.deepBlue, size: 22),
-          const SizedBox(width: 14),
-          Text(label,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
-          const Spacer(),
-          Text(value,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 24),
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: AppTheme.grey,
+                      fontWeight: FontWeight.w500)),
+              const SizedBox(height: 4),
+              Text(value,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.darkText)),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+  
+  Widget _buildActionTile(IconData icon, String label, VoidCallback onTap) {
+      return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.offWhite,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: AppTheme.darkText, size: 24),
+                ),
+                const SizedBox(width: 16),
+                Text(label,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.darkText)),
+                const Spacer(),
+                const Icon(Icons.arrow_forward_ios_rounded, size: 18, color: AppTheme.grey),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

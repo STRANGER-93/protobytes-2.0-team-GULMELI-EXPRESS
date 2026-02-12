@@ -10,6 +10,11 @@ class AppTheme {
   static const Color darkText = Color(0xFF1A1A2E);
   static const Color grey = Color(0xFF6B7280);
   static const Color lightGrey = Color(0xFFE5E7EB);
+  
+  // Semantic Colors
+  static const Color success = Color(0xFF2E7D32); // Green 800
+  static const Color warning = Color(0xFFF57C00); // Orange 700
+  static const Color info = Color(0xFF0288D1);    // Light Blue 700
 
   static ThemeData get nepaliTheme {
     return ThemeData(
@@ -23,6 +28,7 @@ class AppTheme {
         onSecondary: white,
         onSurface: darkText,
         error: const Color(0xFFB00020),
+        tertiary: success, // Using tertiary for success in this context if needed, or just custom
       ),
       scaffoldBackgroundColor: offWhite,
       textTheme: GoogleFonts.muktaTextTheme().copyWith(
