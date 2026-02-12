@@ -1,0 +1,48 @@
+from django.db import models
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    PermissionsMixin,
+    BaseUserManager
+)
+
+
+class UserManager(BaseUserManager):
+
+    def create_user(self, phone, password=None, **extra_fields):
+        if not phone:
+            raise ValueError("phone number is required")
+
+        user = self.model(phone=phone, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, phone, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(phone, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+
+    ROLE_CHOICES = (
+        ('citizen', 'Citizen'),
+        ('provider', 'Provider'),
+        ('admin', 'Admin'),
+    )
+
+    phone = models.CharField(max_length=15, unique=True)
+    ward = models.IntegerField()
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='citizen')
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = ['ward']
+
+    def __str__(self):
+        return self.phone
