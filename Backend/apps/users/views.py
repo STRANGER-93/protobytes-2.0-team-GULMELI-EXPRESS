@@ -115,3 +115,16 @@ class CurrentUserView(generics.RetrieveUpdateAPIView):
         if self.request.method == 'PATCH':
             return UserUpdateSerializer
         return UserSerializer
+    
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    """Complete user profile with photo upload"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+    
+    def get_object(self):
+        return self.request.user
+    
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH', 'PUT']:
+            return UserUpdateSerializer
+        return UserSerializer
