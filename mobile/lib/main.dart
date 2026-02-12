@@ -1,44 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'core/routes.dart';
+import 'core/state/app_state.dart';
+import 'shared/theme/app_theme.dart';
+import 'shared/language/language_provider.dart';
+import 'l10n/generated/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String result = "Press button";
-
-  Future<void> testApi() async {
-    final response = await http.get(
-      Uri.parse("http://10.0.2.2:8000/api/"),
-    );
-
-    setState(() {
-      result = response.body;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(result),
-              ElevatedButton(
-                onPressed: testApi,
-                child: const Text("Call API"),
-              ),
-            ],
+    return AppStateProvider(
+      builder: (_) => LanguageProvider(
+        builder: (locale) => Builder(
+          builder: (ctx) => MaterialApp(
+            title: 'JanSawa',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.nepaliTheme,
+            locale: locale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            initialRoute: "/",
+            onGenerateRoute: (settings) =>
+                AppRoutes.generateRoute(settings, ctx),
           ),
         ),
       ),

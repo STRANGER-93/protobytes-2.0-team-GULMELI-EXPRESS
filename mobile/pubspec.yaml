@@ -1,5 +1,5 @@
-name: mobile
-description: "A new Flutter project."
+name: jansawa
+description: "JanSawa - सेवा र तालिम तपाईंको औंलामा।"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -29,7 +29,12 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   http: ^1.2.0
+  google_fonts: ^6.1.0
+  intl: ^0.20.2
+  url_launcher: ^6.1.10
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
 
@@ -53,6 +58,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

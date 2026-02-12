@@ -1,30 +1,31 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:mobile/main.dart';
+import 'package:jansawa/l10n/generated/app_localizations.dart';
+import 'package:jansawa/features/auth/screens/login_screen.dart';
+import 'package:jansawa/shared/theme/app_theme.dart';
+import 'package:jansawa/shared/language/language_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Login screen smoke test', (WidgetTester tester) async {
+    // Build the login screen wrapped with l10n delegates and language provider.
+    await tester.pumpWidget(
+      LanguageProvider(
+        builder: (locale) => MaterialApp(
+          locale: locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.nepaliTheme,
+          home: const LoginScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify Nepali login labels are rendered.
+    expect(find.text('नमस्ते!'), findsOneWidget);
+    expect(find.text('प्रयोगकर्ता नाम'), findsOneWidget);
+    expect(find.text('पासवर्ड'), findsOneWidget);
+    expect(find.text('लगइन गर्नुहोस्'), findsOneWidget);
+    expect(find.text('नयाँ खाता बनाउनुहोस्'), findsOneWidget);
   });
 }

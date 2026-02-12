@@ -1,0 +1,112 @@
+{
+  "@@locale": "en",
+
+  "namaste": "Namaste!",
+  "@namaste": { "description": "Greeting on login screen" },
+
+  "welcomeJanSawa": "Welcome to JanSawa",
+  "@welcomeJanSawa": { "description": "Subtitle on login screen" },
+
+  "username": "Username",
+  "@username": { "description": "Username field label" },
+
+  "usernameHint": "Enter your username",
+  "@usernameHint": { "description": "Username field hint" },
+
+  "usernameRequired": "Username is required",
+  "@usernameRequired": { "description": "Username validation error" },
+
+  "password": "Password",
+  "@password": { "description": "Password field label" },
+
+  "passwordHint": "Enter your password",
+  "@passwordHint": { "description": "Password field hint" },
+
+  "passwordRequired": "Password is required",
+  "@passwordRequired": { "description": "Password validation error" },
+
+  "passwordMin4": "Password must be at least 4 characters",
+  "@passwordMin4": { "description": "Password min length error" },
+
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": { "description": "Forgot password link" },
+
+  "login": "Login",
+  "@login": { "description": "Login button" },
+
+  "loginFailed": "Login failed. Please try again.",
+  "@loginFailed": { "description": "Login failure snackbar" },
+
+  "or": "or",
+  "@or": { "description": "Divider text" },
+
+  "createAccount": "Create new account",
+  "@createAccount": { "description": "Create account button on login" },
+
+  "madeForNepal": "Made for Nepal \uD83C\uDDF3\uD83C\uDDF5",
+  "@madeForNepal": { "description": "Footer text" },
+
+  "createAccountTitle": "Create Account",
+  "@createAccountTitle": { "description": "Signup screen title" },
+
+  "joinJanSawa": "Join JanSawa",
+  "@joinJanSawa": { "description": "Signup screen subtitle" },
+
+  "fullName": "Full Name",
+  "@fullName": { "description": "Full name field label" },
+
+  "fullNameHint": "Enter your full name",
+  "@fullNameHint": { "description": "Full name field hint" },
+
+  "fullNameRequired": "Full name is required",
+  "@fullNameRequired": { "description": "Full name validation error" },
+
+  "email": "Email",
+  "@email": { "description": "Email field label" },
+
+  "emailRequired": "Email is required",
+  "@emailRequired": { "description": "Email validation error" },
+
+  "emailInvalid": "Please enter a valid email",
+  "@emailInvalid": { "description": "Email format validation error" },
+
+  "usernameChoose": "Choose a username",
+  "@usernameChoose": { "description": "Username hint on signup" },
+
+  "usernameMin3": "Minimum 3 characters required",
+  "@usernameMin3": { "description": "Username min length error" },
+
+  "passwordMin6Hint": "At least 6 characters",
+  "@passwordMin6Hint": { "description": "Password hint on signup" },
+
+  "passwordMin6": "Password must be at least 6 characters",
+  "@passwordMin6": { "description": "Password min 6 error" },
+
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": { "description": "Confirm password label" },
+
+  "confirmPasswordHint": "Re-enter your password",
+  "@confirmPasswordHint": { "description": "Confirm password hint" },
+
+  "confirmPasswordRequired": "Please confirm your password",
+  "@confirmPasswordRequired": { "description": "Confirm password error" },
+
+  "passwordMismatch": "Passwords do not match",
+  "@passwordMismatch": { "description": "Password mismatch error" },
+
+  "register": "Register",
+  "@register": { "description": "Register button" },
+
+  "registerSuccess": "Account created! Please login.",
+  "@registerSuccess": { "description": "Registration success snackbar" },
+
+  "registerFailed": "Registration failed. Please try again.",
+  "@registerFailed": { "description": "Registration failure snackbar" },
+
+  "alreadyHaveAccount": "Already have an account? Login",
+  "@alreadyHaveAccount": { "description": "Back to login button on signup" },
+  "partnerDemo": "Partner Demo Login",
+  "@partnerDemo": { "description": "Demo login button for partners" },
+  "userDemo": "User Demo Login",
+  "@userDemo": { "description": "Demo login button for users" }
+}
