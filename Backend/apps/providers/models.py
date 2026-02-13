@@ -108,7 +108,6 @@ class ProviderProfile(models.Model):
         indexes = [
             models.Index(fields=['municipality_verified', 'ctevt_status']),
             models.Index(fields=['-avg_rating']),
-            models.Index(fields=['user__municipality']),
             models.Index(fields=['-created_at']),
         ]
         ordering = ['-avg_rating', '-jobs_completed']

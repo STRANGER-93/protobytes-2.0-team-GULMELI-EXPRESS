@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_yasg',
     
     # Local apps
     'apps.users',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'apps.reviews',
     'apps.payments',
     'apps.governance',
+    
 ]
 
 MIDDLEWARE = [
