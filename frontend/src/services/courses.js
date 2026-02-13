@@ -18,7 +18,8 @@ export const courseService = {
 
         const queryString = params.toString();
         const res = await api.get(`/courses/${queryString ? '?' + queryString : ''}`);
-        return res.data;
+        // DRF returns paginated response: {count, next, previous, results}
+        return res.data.results || res.data;
     },
 
     /**
@@ -78,7 +79,8 @@ export const courseService = {
 
         const queryString = params.toString();
         const res = await api.get(`/enrollments/${queryString ? '?' + queryString : ''}`);
-        return res.data;
+        // DRF returns paginated response: {count, next, previous, results}
+        return res.data.results || res.data;
     },
 
     /**
