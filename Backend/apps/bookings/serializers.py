@@ -2,7 +2,8 @@
 from rest_framework import serializers
 from django.utils import timezone
 from .models import Booking
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import UserSerializer, SimpleUserSerializer
+from apps.users.models import User
 from apps.providers.serializers import ProviderListSerializer
 from apps.municipalities.serializers import MunicipalitySerializer
 
@@ -36,9 +37,10 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = [
-            'provider', 'skill_category', 'scheduled_time',
-            'description', 'location_address', 'amount'
+            'id', 'provider', 'skill_category', 'scheduled_time',
+            'description', 'location_address', 'amount', 'status'
         ]
+        read_only_fields = ['id', 'status']
     
     def validate_provider(self, value):
         """Validate provider exists and has profile"""
@@ -77,20 +79,24 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         validated_data['payment_status'] = 'pending'
         
         return super().create(validated_data)
+        
+    def to_representation(self, instance):
+        """Use full BookingSerializer for response"""
+        return BookingSerializer(instance).data
 
 
 class BookingListSerializer(serializers.ModelSerializer):
     """Lightweight serializer for booking lists"""
-    citizen_name = serializers.CharField(source='citizen.name', read_only=True)
-    provider_name = serializers.CharField(source='provider.name', read_only=True)
-    municipality_name = serializers.CharField(source='municipality.name', read_only=True)
+    citizen_detail = SimpleUserSerializer(source='citizen', read_only=True)
+    provider_detail = SimpleUserSerializer(source='provider', read_only=True)
+    municipality_detail = MunicipalitySerializer(source='municipality', read_only=True)
     
     class Meta:
         model = Booking
         fields = [
-            'id', 'citizen_name', 'provider_name', 'municipality_name',
-            'skill_category', 'scheduled_time', 'status', 'amount',
-            'payment_status', 'created_at'
+            'id', 'citizen_detail', 'provider_detail', 'municipality_detail',
+            'skill_category', 'scheduled_time', 'description', 'location_address', 
+            'status', 'amount', 'payment_status', 'created_at'
         ]
 
 

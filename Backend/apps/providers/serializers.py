@@ -95,11 +95,12 @@ class ProviderListSerializer(serializers.ModelSerializer):
     """Lightweight serializer for provider listing"""
     user_detail = UserSerializer(source='user', read_only=True)
     skill_display_names = serializers.ReadOnlyField(source='get_skill_display_names')
+    trust_score = serializers.ReadOnlyField()
     
     class Meta:
         model = ProviderProfile
         fields = [
             'id', 'user_detail', 'skill_categories', 'skill_display_names',
             'bio', 'municipality_verified', 'ctevt_status', 'avg_rating',
-            'jobs_completed', 'experience_years'
+            'jobs_completed', 'experience_years', 'trust_score'
         ]

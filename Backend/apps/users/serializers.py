@@ -17,6 +17,13 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined', 'last_login']
 
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    """Lightweight user serializer for lists/nested use"""
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'phone', 'photo', 'role']
+
+
 class UserRegistrationSerializer(serializers.Serializer):
     """Registration serializer"""
     phone = serializers.CharField(max_length=15)

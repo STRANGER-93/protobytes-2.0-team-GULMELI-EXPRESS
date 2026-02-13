@@ -1,0 +1,988 @@
+{
+    "info": {
+        "name": "JanSewa API Audit",
+        "description": "Auto-generated API collection from static analysis.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/bookings/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "POST http://127.0.0.1:8000/api/v1/bookings/create/",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/create/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        "create",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/bookings/:pk/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/:pk/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        ":pk",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/bookings/:pk/confirm/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/:pk/confirm/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        ":pk",
+                        "confirm",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/bookings/:pk/complete/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/:pk/complete/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        ":pk",
+                        "complete",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/bookings/:pk/cancel/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/bookings/:pk/cancel/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "bookings",
+                        ":pk",
+                        "cancel",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/governance/dashboard/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/governance/dashboard/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "governance",
+                        "dashboard",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/governance/provider/dashboard/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/governance/provider/dashboard/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "governance",
+                        "provider",
+                        "dashboard",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/municipalities/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/municipalities/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "municipalities",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/municipalities/:pk/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/municipalities/:pk/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "municipalities",
+                        ":pk",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/payments/mock/initiate/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/payments/mock/initiate/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "mock",
+                        "initiate",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/payments/mock/callback/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/payments/mock/callback/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "mock",
+                        "callback",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/payments/status/:reference_id/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/payments/status/:reference_id/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "status",
+                        ":reference_id",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "POST http://127.0.0.1:8000/api/v1/providers/register/",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/register/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        "register",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/me/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/me/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        "me",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/search/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/search/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        "search",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/:pk/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/:pk/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        ":pk",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/:pk/stats/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/:pk/stats/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        ":pk",
+                        "stats",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/:pk/verify/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/:pk/verify/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        ":pk",
+                        "verify",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/providers/pending-verification/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/providers/pending-verification/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "providers",
+                        "pending-verification",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/reviews/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/reviews/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "reviews",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "POST http://127.0.0.1:8000/api/v1/reviews/create/",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/reviews/create/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "reviews",
+                        "create",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/reviews/:pk/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/reviews/:pk/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "reviews",
+                        ":pk",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/auth/send-otp/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/auth/send-otp/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "send-otp",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/auth/verify-otp/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/auth/verify-otp/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "verify-otp",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/auth/token/refresh/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/auth/token/refresh/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "token",
+                        "refresh",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/auth/me/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/auth/me/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "me",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/api/v1/auth/profile/",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/v1/auth/profile/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "profile",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/swagger/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/swagger/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "swagger",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/redoc/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/redoc/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "redoc",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/admin/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/admin/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "admin",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/login/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/login/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "login",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/logout/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/logout/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "logout",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/password_change/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/password_change/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "password_change",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/password_change/done/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/password_change/done/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "password_change",
+                        "done",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/password_reset/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/password_reset/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "password_reset",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/password_reset/done/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/password_reset/done/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "password_reset",
+                        "done",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/reset/<uidb64/<token/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/reset/<uidb64/<token/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "reset",
+                        "<uidb64",
+                        "<token",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/reset/done/",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/reset/done/",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "reset",
+                        "done",
+                        ""
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "GET http://127.0.0.1:8000/:url",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/:url",
+                    "protocol": "http",
+                    "host": [
+                        "127.0.0.1"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        ":url"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

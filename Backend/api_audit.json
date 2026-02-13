@@ -1,0 +1,497 @@
+[
+    {
+        "path": "",
+        "view": "views.BookingListView.as_view()",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": "BookingListSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "create/",
+        "view": "views.BookingCreateView.as_view()",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": "BookingCreateSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "IsCitizen"
+        ]
+    },
+    {
+        "path": "<int:pk>/",
+        "view": "views.BookingDetailView.as_view()",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": "BookingSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "IsBookingParticipant"
+        ]
+    },
+    {
+        "path": "<int:pk>/confirm/",
+        "view": "views.confirm_booking",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "<int:pk>/complete/",
+        "view": "views.complete_booking",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "<int:pk>/cancel/",
+        "view": "views.cancel_booking",
+        "source": ".\\apps\\bookings\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "dashboard/",
+        "view": "views.municipal_dashboard",
+        "source": ".\\apps\\governance\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "provider/dashboard/",
+        "view": "views.provider_dashboard",
+        "source": ".\\apps\\governance\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "",
+        "view": "views.MunicipalityListView.as_view()",
+        "source": ".\\apps\\municipalities\\urls.py",
+        "type": "path",
+        "serializer": "MunicipalitySerializer",
+        "permissions": [
+            "AllowAny"
+        ]
+    },
+    {
+        "path": "<int:pk>/",
+        "view": "views.MunicipalityDetailView.as_view()",
+        "source": ".\\apps\\municipalities\\urls.py",
+        "type": "path",
+        "serializer": "MunicipalitySerializer",
+        "permissions": [
+            "AllowAny"
+        ]
+    },
+    {
+        "path": "mock/initiate/",
+        "view": "views.initiate_payment",
+        "source": ".\\apps\\payments\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "mock/callback/",
+        "view": "views.payment_callback",
+        "source": ".\\apps\\payments\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "status/<str:reference_id>/",
+        "view": "views.payment_status",
+        "source": ".\\apps\\payments\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "register/",
+        "view": "views.ProviderRegisterView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": "ProviderRegistrationSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "IsProviderUser"
+        ]
+    },
+    {
+        "path": "me/",
+        "view": "views.ProviderMeView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": [
+            "IsAuthenticated",
+            "IsProviderUser"
+        ]
+    },
+    {
+        "path": "search/",
+        "view": "views.ProviderSearchView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": "ProviderListSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "<int:pk>/",
+        "view": "views.ProviderDetailView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": "ProviderProfileSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "<int:pk>/stats/",
+        "view": "views.provider_stats",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "<int:pk>/verify/",
+        "view": "views.ProviderVerifyView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": "ProviderVerificationSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "CanVerifyProvider"
+        ]
+    },
+    {
+        "path": "pending-verification/",
+        "view": "views.ProviderListForVerificationView.as_view()",
+        "source": ".\\apps\\providers\\urls.py",
+        "type": "path",
+        "serializer": "ProviderListSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "CanVerifyProvider"
+        ]
+    },
+    {
+        "path": "",
+        "view": "views.ReviewListView.as_view()",
+        "source": ".\\apps\\reviews\\urls.py",
+        "type": "path",
+        "serializer": "ReviewListSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "create/",
+        "view": "views.ReviewCreateView.as_view()",
+        "source": ".\\apps\\reviews\\urls.py",
+        "type": "path",
+        "serializer": "ReviewCreateSerializer",
+        "permissions": [
+            "IsAuthenticated",
+            "IsCitizen"
+        ]
+    },
+    {
+        "path": "<int:pk>/",
+        "view": "views.ReviewDetailView.as_view()",
+        "source": ".\\apps\\reviews\\urls.py",
+        "type": "path",
+        "serializer": "ReviewSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "send-otp/",
+        "view": "views.send_otp",
+        "source": ".\\apps\\users\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "verify-otp/",
+        "view": "views.verify_otp",
+        "source": ".\\apps\\users\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "token/refresh/",
+        "view": "TokenRefreshView.as_view()",
+        "source": ".\\apps\\users\\urls.py",
+        "type": "path",
+        "serializer": "api_settings",
+        "permissions": []
+    },
+    {
+        "path": "me/",
+        "view": "views.CurrentUserView.as_view()",
+        "source": ".\\apps\\users\\urls.py",
+        "type": "path",
+        "serializer": "UserSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "profile/",
+        "view": "views.UserProfileView.as_view()",
+        "source": ".\\apps\\users\\urls.py",
+        "type": "path",
+        "serializer": "UserSerializer",
+        "permissions": [
+            "IsAuthenticated"
+        ]
+    },
+    {
+        "path": "swagger/",
+        "view": "schema_view.with_ui('swagger'",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "redoc/",
+        "view": "schema_view.with_ui('redoc'",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "admin/",
+        "view": "admin.site.urls)",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/auth/",
+        "view": "include('apps.users.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/municipalities/",
+        "view": "include('apps.municipalities.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/providers/",
+        "view": "include('apps.providers.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/bookings/",
+        "view": "include('apps.bookings.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/reviews/",
+        "view": "include('apps.reviews.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/payments/",
+        "view": "include('apps.payments.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "api/v1/governance/",
+        "view": "include('apps.governance.urls'))",
+        "source": ".\\jansewa\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "",
+        "view": "views.BaseAdminDocsView.as_view(template_name=\"admin_doc/index.html\")",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "bookmarklets/",
+        "view": "views.BookmarkletsView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "tags/",
+        "view": "views.TemplateTagIndexView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "filters/",
+        "view": "views.TemplateFilterIndexView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "views/",
+        "view": "views.ViewIndexView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "views/<view>/",
+        "view": "views.ViewDetailView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "models/",
+        "view": "views.ModelIndexView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "templates/<path:template>/",
+        "view": "views.TemplateDetailView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\admindocs\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "login/",
+        "view": "views.LoginView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "logout/",
+        "view": "views.LogoutView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "password_change/",
+        "view": "views.PasswordChangeView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "password_change/done/",
+        "view": "views.PasswordChangeDoneView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "password_reset/",
+        "view": "views.PasswordResetView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "password_reset/done/",
+        "view": "views.PasswordResetDoneView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "reset/<uidb64>/<token>/",
+        "view": "views.PasswordResetConfirmView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "reset/done/",
+        "view": "views.PasswordResetCompleteView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\auth\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    },
+    {
+        "path": "<path:url>",
+        "view": "views.flatpage",
+        "source": ".\\venv\\Lib\\site-packages\\django\\contrib\\flatpages\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "auth/",
+        "view": "include('rest_framework.urls'))\n    ]\n\nYou should make sure your authentication settings include `SessionAuthentication`.\n\"\"\"\nfrom django.contrib.auth import views\nfrom django.urls import path\n\napp_name = 'rest_framework'\nurlpatterns = [\n    path('login/'",
+        "source": ".\\venv\\Lib\\site-packages\\rest_framework\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": null
+    },
+    {
+        "path": "logout/",
+        "view": "views.LogoutView.as_view()",
+        "source": ".\\venv\\Lib\\site-packages\\rest_framework\\urls.py",
+        "type": "path",
+        "serializer": null,
+        "permissions": []
+    }
+]

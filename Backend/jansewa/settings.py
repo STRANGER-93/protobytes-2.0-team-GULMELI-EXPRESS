@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'drf_yasg',
+    'drf_spectacular',
+    'django_extensions',
     
     # Local apps
     'apps.users',
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'apps.reviews',
     'apps.payments',
     'apps.governance',
-    
+    'apps.courses',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,7 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.FormParser',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # Simple JWT

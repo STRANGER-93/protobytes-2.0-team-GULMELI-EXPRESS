@@ -1,0 +1,198 @@
+[
+    {
+        "url": "/api/v1/auth/me/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.users.views.CurrentUserView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/auth/profile/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.users.views.UserProfileView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/auth/send-otp/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.users.views.send_otp",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/auth/token/refresh/",
+        "method": "GET",
+        "status": 405,
+        "view": "rest_framework_simplejwt.views.TokenRefreshView",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/auth/verify-otp/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.users.views.verify_otp",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/bookings/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.bookings.views.BookingListView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/bookings/1/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.bookings.views.BookingDetailView",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/bookings/1/cancel/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.bookings.views.cancel_booking",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/bookings/1/complete/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.bookings.views.complete_booking",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/bookings/1/confirm/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.bookings.views.confirm_booking",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/bookings/create/",
+        "method": "POST",
+        "status": 400,
+        "view": "apps.bookings.views.BookingCreateView",
+        "error": "b'{\"provider\":[\"This field is required.\"],\"skill_category\":[\"This field is required.\"],\"scheduled_time\":[\"This field is required.\"],\"description\":[\"This field is required.\"],\"location_address\":[\"This field is required.\"],\"amount\":[\"This field is required.\"]}'"
+    },
+    {
+        "url": "/api/v1/governance/dashboard/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.governance.views.municipal_dashboard",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/governance/provider/dashboard/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.governance.views.provider_dashboard",
+        "error": "b'{\"error\":\"Only providers can access this endpoint\"}'"
+    },
+    {
+        "url": "/api/v1/municipalities/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.municipalities.views.MunicipalityListView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/municipalities/1/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.municipalities.views.MunicipalityDetailView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/payments/mock/callback/",
+        "method": "GET",
+        "status": 400,
+        "view": "apps.payments.views.payment_callback",
+        "error": "b'{\"error\":\"Missing reference\"}'"
+    },
+    {
+        "url": "/api/v1/payments/mock/initiate/",
+        "method": "GET",
+        "status": 405,
+        "view": "apps.payments.views.initiate_payment",
+        "error": "b'{\"detail\":\"Method \\\\\"GET\\\\\" not allowed.\"}'"
+    },
+    {
+        "url": "/api/v1/payments/status/mock-ref/",
+        "method": "GET",
+        "status": 404,
+        "view": "apps.payments.views.payment_status",
+        "error": "b'{\"detail\":\"No PaymentTransaction matches the given query.\"}'"
+    },
+    {
+        "url": "/api/v1/providers/1/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.providers.views.ProviderDetailView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/providers/1/stats/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.providers.views.provider_stats",
+        "error": null
+    },
+    {
+        "url": "/api/v1/providers/1/verify/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.providers.views.ProviderVerifyView",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/providers/me/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.providers.views.ProviderMeView",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/providers/pending-verification/",
+        "method": "GET",
+        "status": 403,
+        "view": "apps.providers.views.ProviderListForVerificationView",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/providers/register/",
+        "method": "POST",
+        "status": 403,
+        "view": "apps.providers.views.ProviderRegisterView",
+        "error": "b'{\"detail\":\"You do not have permission to perform this action.\"}'"
+    },
+    {
+        "url": "/api/v1/providers/search/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.providers.views.ProviderSearchView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/reviews/",
+        "method": "GET",
+        "status": 200,
+        "view": "apps.reviews.views.ReviewListView",
+        "error": null
+    },
+    {
+        "url": "/api/v1/reviews/1/",
+        "method": "GET",
+        "status": 404,
+        "view": "apps.reviews.views.ReviewDetailView",
+        "error": "b'{\"detail\":\"No Review matches the given query.\"}'"
+    },
+    {
+        "url": "/api/v1/reviews/create/",
+        "method": "POST",
+        "status": 400,
+        "view": "apps.reviews.views.ReviewCreateView",
+        "error": "b'{\"booking\":[\"This field is required.\"],\"rating\":[\"This field is required.\"]}'"
+    }
+]

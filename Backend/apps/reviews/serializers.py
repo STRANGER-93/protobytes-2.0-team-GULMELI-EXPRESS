@@ -1,12 +1,12 @@
 # backend/apps/reviews/serializers.py
 from rest_framework import serializers
 from .models import Review
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import UserSerializer, SimpleUserSerializer
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     """Main review serializer"""
-    reviewer_detail = UserSerializer(source='reviewer', read_only=True)
+    reviewer_detail = SimpleUserSerializer(source='reviewer', read_only=True)
     provider_name = serializers.CharField(source='provider.name', read_only=True)
     
     class Meta:
@@ -63,10 +63,10 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 
 class ReviewListSerializer(serializers.ModelSerializer):
     """Lightweight review serializer for lists"""
-    reviewer_name = serializers.CharField(source='reviewer.name', read_only=True)
+    reviewer_detail = SimpleUserSerializer(source='reviewer', read_only=True)
     
     class Meta:
         model = Review
         fields = [
-            'id', 'rating', 'comment', 'reviewer_name', 'created_at'
+            'id', 'rating', 'comment', 'reviewer_detail', 'created_at'
         ]
