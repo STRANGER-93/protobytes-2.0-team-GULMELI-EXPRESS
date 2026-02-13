@@ -8,7 +8,7 @@ class Municipality(models.Model):
     name = models.CharField(max_length=100, unique=True)
     district = models.CharField(max_length=100)
     province = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True) 
     
     class Meta:
         db_table = 'municipalities'

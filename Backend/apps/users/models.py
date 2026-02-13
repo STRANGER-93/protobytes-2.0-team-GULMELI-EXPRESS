@@ -15,6 +15,14 @@ class UserManager(BaseUserManager):
         if not municipality:
             raise ValueError('Municipality is required')
         
+        # Handle municipality as ID or instance
+        from apps.municipalities.models import Municipality
+        if isinstance(municipality, int) or isinstance(municipality, str):
+            try:
+                municipality = Municipality.objects.get(id=municipality)
+            except Municipality.DoesNotExist:
+                raise ValueError(f'Municipality with id {municipality} does not exist')
+        
         user = self.model(
             phone=phone,
             name=name,
