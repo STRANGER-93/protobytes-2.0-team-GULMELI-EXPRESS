@@ -37,7 +37,9 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
       body: RefreshIndicator(
         onRefresh: _loadBookings,
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
           slivers: [
             SliverAppBar(
               expandedHeight: 120.0,
@@ -49,7 +51,11 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
                 centerTitle: true,
                 title: const Text(
                   "My Bookings",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
                 background: Container(
                   decoration: const BoxDecoration(
@@ -62,9 +68,11 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
                 ),
               ),
             ),
-            
+
             if (_isLoading)
-              const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+              const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              )
             else if (_bookings.isEmpty)
               _buildEmptyState()
             else
@@ -77,7 +85,7 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
                   ),
                 ),
               ),
-            
+
             const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
@@ -87,77 +95,116 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
 
   Widget _bookingCard(api.Booking booking) {
     final statusColor = _getStatusColor(booking.status);
-    
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(Icons.handyman_rounded, color: statusColor, size: 28),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    booking.providerName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppTheme.darkText),
-                  ),
-                  Text(
-                    booking.service,
-                    style: const TextStyle(fontSize: 14, color: AppTheme.grey),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.access_time_rounded, size: 14, color: AppTheme.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        _formatDate(booking.scheduledTime),
-                        style: const TextStyle(fontSize: 12, color: AppTheme.grey),
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        "Rs. ${booking.amount.toInt()}",
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.deepBlue),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                booking.status.toUpperCase(),
-                style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold),
-              ),
+
+    return GestureDetector(
+      onTap: () async {
+        await Navigator.pushNamed(
+          context,
+          '/citizen/booking-detail',
+          arguments: booking.id,
+        );
+        _loadBookings(); // refresh on return
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(
+                  Icons.handyman_rounded,
+                  color: statusColor,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      booking.providerName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: AppTheme.darkText,
+                      ),
+                    ),
+                    Text(
+                      booking.service,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppTheme.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 14,
+                          color: AppTheme.grey,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDate(booking.scheduledTime),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.grey,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          "Rs. ${booking.amount.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.deepBlue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  booking.status.toUpperCase(),
+                  style: TextStyle(
+                    color: statusColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -168,10 +215,20 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.calendar_today_rounded, size: 64, color: Colors.grey.shade300),
+          Icon(
+            Icons.calendar_today_rounded,
+            size: 64,
+            color: Colors.grey.shade300,
+          ),
           const SizedBox(height: 16),
-          const Text("No bookings found", style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold)),
-          const Text("Your professional services will appear here", style: TextStyle(color: AppTheme.grey, fontSize: 12)),
+          const Text(
+            "No bookings found",
+            style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold),
+          ),
+          const Text(
+            "Your professional services will appear here",
+            style: TextStyle(color: AppTheme.grey, fontSize: 12),
+          ),
         ],
       ),
     );
@@ -188,11 +245,16 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'pending': return Colors.orange;
-      case 'confirmed': return AppTheme.success;
-      case 'completed': return AppTheme.deepBlue;
-      case 'cancelled': return AppTheme.crimson;
-      default: return AppTheme.grey;
+      case 'pending':
+        return Colors.orange;
+      case 'confirmed':
+        return AppTheme.success;
+      case 'completed':
+        return AppTheme.deepBlue;
+      case 'cancelled':
+        return AppTheme.crimson;
+      default:
+        return AppTheme.grey;
     }
   }
 }

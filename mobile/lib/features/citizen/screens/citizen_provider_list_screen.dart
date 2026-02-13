@@ -7,13 +7,14 @@ class CitizenProviderListScreen extends StatefulWidget {
   const CitizenProviderListScreen({super.key});
 
   @override
-  State<CitizenProviderListScreen> createState() => _CitizenProviderListScreenState();
+  State<CitizenProviderListScreen> createState() =>
+      _CitizenProviderListScreenState();
 }
 
 class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
   final ProviderService _providerService = ProviderService();
   final _searchController = TextEditingController();
-  
+
   List<api.ProviderProfile> _providers = [];
   bool _isLoading = true;
   String? _selectedCategory;
@@ -28,7 +29,7 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
     setState(() => _isLoading = true);
     final results = await _providerService.getProviders(
       search: _searchController.text.isEmpty ? null : _searchController.text,
-      service: _selectedCategory,
+      skill: _selectedCategory,
     );
     setState(() {
       _providers = results;
@@ -41,7 +42,9 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
     return Scaffold(
       backgroundColor: AppTheme.offWhite,
       body: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         slivers: [
           SliverAppBar(
             expandedHeight: 180.0,
@@ -65,7 +68,10 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
                     onSubmitted: (_) => _fetchProviders(),
                     decoration: InputDecoration(
                       hintText: "Search for professionals...",
-                      prefixIcon: const Icon(Icons.search, color: AppTheme.deepBlue),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: AppTheme.deepBlue,
+                      ),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -79,11 +85,15 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
               centerTitle: true,
               title: const Text(
                 "Find Professionals",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
-          
+
           // Category Selector
           SliverToBoxAdapter(
             child: SingleChildScrollView(
@@ -91,18 +101,21 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
               child: Row(
                 children: [
-                   _categoryChip("All", null),
-                   _categoryChip("Plumbing", "plumbing"),
-                   _categoryChip("Electric", "electric"),
-                   _categoryChip("Health", "health"),
-                   _categoryChip("Legal", "legal"),
+                  _categoryChip("All", null),
+                  _categoryChip("Electrician", "electrician"),
+                  _categoryChip("Plumber", "plumber"),
+                  _categoryChip("Carpenter", "carpenter"),
+                  _categoryChip("Mason", "mason"),
+                  _categoryChip("Painter", "painter"),
                 ],
               ),
             ),
           ),
 
           if (_isLoading)
-            const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            )
           else if (_providers.isEmpty)
             _buildEmptyState()
           else
@@ -115,7 +128,7 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
                 ),
               ),
             ),
-          
+
           const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
@@ -177,8 +190,12 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
                   radius: 35,
                   backgroundColor: AppTheme.offWhite,
                   child: Text(
-                    provider.name.isNotEmpty ? provider.name[0] : '?', 
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.deepBlue)
+                    provider.name.isNotEmpty ? provider.name[0] : '?',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.deepBlue,
+                    ),
                   ),
                 ),
               ),
@@ -191,25 +208,51 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            provider.name, 
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                            provider.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (provider.isVerified)
+                        if (provider.municipalityVerified)
                           const Padding(
                             padding: EdgeInsets.only(left: 4),
-                            child: Icon(Icons.verified, color: Colors.blue, size: 16),
+                            child: Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                              size: 16,
+                            ),
                           ),
                       ],
                     ),
-                    Text(provider.service, style: const TextStyle(color: AppTheme.grey, fontSize: 14)),
+                    Text(
+                      provider.primarySkill,
+                      style: const TextStyle(
+                        color: AppTheme.grey,
+                        fontSize: 14,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.star_rounded, color: Colors.amber, size: 18),
-                        Text(" ${provider.avgRating} ", style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Text("(${provider.jobsCompleted} jobs)", style: const TextStyle(color: AppTheme.grey, fontSize: 12)),
+                        const Icon(
+                          Icons.star_rounded,
+                          color: Colors.amber,
+                          size: 18,
+                        ),
+                        Text(
+                          " ${provider.avgRating} ",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "(${provider.jobsCompleted} jobs)",
+                          style: const TextStyle(
+                            color: AppTheme.grey,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -230,8 +273,14 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
         children: [
           Icon(Icons.search_off_rounded, size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
-          const Text("No professionals found", style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold)),
-          const Text("Try changing your search or filters", style: TextStyle(color: AppTheme.grey, fontSize: 12)),
+          const Text(
+            "No professionals found",
+            style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold),
+          ),
+          const Text(
+            "Try changing your search or filters",
+            style: TextStyle(color: AppTheme.grey, fontSize: 12),
+          ),
         ],
       ),
     );

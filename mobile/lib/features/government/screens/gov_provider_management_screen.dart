@@ -7,13 +7,16 @@ class GovProviderManagementScreen extends StatefulWidget {
   const GovProviderManagementScreen({super.key});
 
   @override
-  State<GovProviderManagementScreen> createState() => _GovProviderManagementScreenState();
+  State<GovProviderManagementScreen> createState() =>
+      _GovProviderManagementScreenState();
 }
 
-class _GovProviderManagementScreenState extends State<GovProviderManagementScreen> with TickerProviderStateMixin {
+class _GovProviderManagementScreenState
+    extends State<GovProviderManagementScreen>
+    with TickerProviderStateMixin {
   final GovernanceService _governanceService = GovernanceService();
   late TabController _tabController;
-  
+
   List<api.ProviderProfile> _pending = [];
   List<api.ProviderProfile> _approved = [];
   bool _isLoading = true;
@@ -29,18 +32,24 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
     setState(() => _isLoading = true);
     final results = await _governanceService.getPendingProviders();
     setState(() {
-      _pending = results.where((p) => !p.isVerified).toList();
-      _approved = results.where((p) => p.isVerified).toList();
+      _pending = results.where((p) => !p.municipalityVerified).toList();
+      _approved = results.where((p) => p.municipalityVerified).toList();
       _isLoading = false;
     });
   }
 
   Future<void> _verify(int id, bool status) async {
-    final success = await _governanceService.verifyProvider(id, verified: status);
+    final success = await _governanceService.verifyProvider(
+      id,
+      verified: status,
+    );
     if (!mounted) return;
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(status ? "Provider Approved ✓" : "Provider Rejected"), backgroundColor: status ? AppTheme.success : AppTheme.crimson),
+        SnackBar(
+          content: Text(status ? "Provider Approved ✓" : "Provider Rejected"),
+          backgroundColor: status ? AppTheme.success : AppTheme.crimson,
+        ),
       );
       _loadData();
     }
@@ -64,8 +73,21 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
             backgroundColor: AppTheme.deepBlue,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              title: const Text("Provider Management", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-              background: Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: [AppTheme.deepBlue, AppTheme.crimson]))),
+              title: const Text(
+                "Provider Management",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppTheme.deepBlue, AppTheme.crimson],
+                  ),
+                ),
+              ),
             ),
             bottom: TabBar(
               controller: _tabController,
@@ -77,22 +99,24 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
             ),
           ),
         ],
-        body: _isLoading 
-          ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildList(_pending, true),
-                _buildList(_approved, false),
-              ],
-            ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildList(_pending, true),
+                  _buildList(_approved, false),
+                ],
+              ),
       ),
     );
   }
 
   Widget _buildList(List<api.ProviderProfile> providers, bool isPending) {
     if (providers.isEmpty) {
-      return Center(child: Text("No ${isPending ? 'pending' : 'approved'} providers"));
+      return Center(
+        child: Text("No ${isPending ? 'pending' : 'approved'} providers"),
+      );
     }
 
     return RefreshIndicator(
@@ -105,7 +129,16 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 Row(
@@ -113,10 +146,22 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
                     CircleAvatar(child: Text(p.name[0])),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Text(p.service, style: const TextStyle(fontSize: 12, color: AppTheme.grey)),
-                      ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            p.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            p.primarySkill,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -124,9 +169,19 @@ class _GovProviderManagementScreenState extends State<GovProviderManagementScree
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      Expanded(child: ElevatedButton(onPressed: () => _verify(p.id, true), child: const Text("Approve"))),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => _verify(p.id, true),
+                          child: const Text("Approve"),
+                        ),
+                      ),
                       const SizedBox(width: 10),
-                      Expanded(child: OutlinedButton(onPressed: () => _verify(p.id, false), child: const Text("Reject"))),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _verify(p.id, false),
+                          child: const Text("Reject"),
+                        ),
+                      ),
                     ],
                   ),
                 ],

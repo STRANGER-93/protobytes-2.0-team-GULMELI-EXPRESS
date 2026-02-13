@@ -138,11 +138,11 @@ class _GovDashboardScreenState extends State<GovDashboardScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildQuickStat(_stats?.providers.total.toString() ?? "0", "Providers", Icons.engineering_rounded),
+          _buildQuickStat(_stats?.providers.totalProviders.toString() ?? "0", "Providers", Icons.engineering_rounded),
           Container(width: 1, height: 30, color: Colors.white24),
           _buildQuickStat(_stats?.bookings.total.toString() ?? "0", "Bookings", Icons.event_available_rounded),
           Container(width: 1, height: 30, color: Colors.white24),
-          _buildQuickStat(_stats?.providers.pendingVerification.toString() ?? "0", "Pending", Icons.pending_actions_rounded),
+          _buildQuickStat(_stats?.providers.pendingProviders.toString() ?? "0", "Pending", Icons.pending_actions_rounded),
         ],
       ),
     );
@@ -172,7 +172,7 @@ class _GovDashboardScreenState extends State<GovDashboardScreen>
         crossAxisSpacing: 16,
         childAspectRatio: 1.1,
         children: [
-          _buildHubCard("Verify Providers", "${_stats?.providers.pendingVerification ?? 0} Pending", Icons.verified_user_rounded, AppTheme.deepBlue, '/gov/providers'),
+          _buildHubCard("Verify Providers", "${_stats?.providers.pendingProviders ?? 0} Pending", Icons.verified_user_rounded, AppTheme.deepBlue, '/gov/providers'),
           _buildHubCard("Task Overview", "${_stats?.bookings.completed ?? 0} Completed", Icons.assignment_rounded, AppTheme.success, '/gov/bookings'),
         ],
       ),

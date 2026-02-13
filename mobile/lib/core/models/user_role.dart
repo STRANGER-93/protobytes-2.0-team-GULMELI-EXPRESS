@@ -1,5 +1,5 @@
-/// Defines the two roles in the JanSawa system.
-enum UserRole { citizen, government }
+/// Defines the three roles in the JanSewa system.
+enum UserRole { citizen, provider, government }
 
 /// Represents a logged-in user.
 class AppUser {
@@ -10,6 +10,8 @@ class AppUser {
   final String location;
   final double walletBalance;
   final String email;
+  final String? photo;
+  final int? municipalityId;
 
   const AppUser({
     required this.id,
@@ -19,6 +21,8 @@ class AppUser {
     required this.location,
     this.walletBalance = 0,
     this.email = '',
+    this.photo,
+    this.municipalityId,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -28,8 +32,11 @@ class AppUser {
 
     // Determine role
     UserRole role = UserRole.citizen;
-    if (userData['role'] == 'municipality_admin' || userData['role'] == 'government') {
+    final backendRole = userData['role'] ?? '';
+    if (backendRole == 'municipality_admin' || backendRole == 'government') {
       role = UserRole.government;
+    } else if (backendRole == 'provider') {
+      role = UserRole.provider;
     }
 
     return AppUser(
@@ -40,91 +47,54 @@ class AppUser {
       location: userData['municipality_detail'] != null
           ? (userData['municipality_detail']['name'] ?? 'Unknown')
           : 'Unknown',
-      walletBalance: double.tryParse(userData['wallet_balance']?.toString() ?? '0') ?? 0,
+      walletBalance:
+          double.tryParse(userData['wallet_balance']?.toString() ?? '0') ?? 0,
       email: userData['email'] ?? '',
+      photo: userData['photo'],
+      municipalityId: userData['municipality'] is int
+          ? userData['municipality']
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'phone': phone,
+    'role': role == UserRole.government ? 'municipality_admin' : role.name,
+    'location': location,
+    'wallet_balance': walletBalance,
+    'email': email,
+    'photo': photo,
+    'municipality': municipalityId,
+  };
+
+  factory AppUser.fromStoredJson(Map<String, dynamic> json) {
+    UserRole role = UserRole.citizen;
+    final r = json['role'] ?? '';
+    if (r == 'municipality_admin' || r == 'government') {
+      role = UserRole.government;
+    } else if (r == 'provider') {
+      role = UserRole.provider;
+    }
+    return AppUser(
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      phone: json['phone'] ?? '',
+      role: role,
+      location: json['location'] ?? 'Unknown',
+      walletBalance: (json['wallet_balance'] ?? 0).toDouble(),
+      email: json['email'] ?? '',
+      photo: json['photo'],
+      municipalityId: json['municipality'],
     );
   }
 }
 
-
-/// Data models used across the app.
-
-class Course {
-  final String id;
-  final String title;
-  final String description;
-  final String instructor;
-  final String duration;
-  final String level;
-  final int enrolledCount;
-  final bool isEnrolled;
-
-  const Course({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.instructor,
-    required this.duration,
-    this.level = 'Beginner',
-    this.enrolledCount = 0,
-    this.isEnrolled = false,
-  });
-
-  Course copyWith({bool? isEnrolled}) {
-    return Course(
-      id: id,
-      title: title,
-      description: description,
-      instructor: instructor,
-      duration: duration,
-      level: level,
-      enrolledCount: enrolledCount,
-      isEnrolled: isEnrolled ?? this.isEnrolled,
-    );
-  }
-}
-
-class ServiceProvider {
-  final String id;
-  final String name;
-  final String service;
-  final String location;
-  final double rating;
-  final String phone;
-  final bool isApproved;
-  final String iconName;
-
-  const ServiceProvider({
-    required this.id,
-    required this.name,
-    required this.service,
-    required this.location,
-    this.rating = 0,
-    this.phone = '',
-    this.isApproved = true,
-    this.iconName = 'build',
-  });
-}
-
-class Booking {
-  final String id;
-  final String serviceName;
-  final String providerName;
-  final String citizenName;
-  final String date;
-  final String status; // pending, confirmed, completed, cancelled
-  final double amount;
-
-  const Booking({
-    required this.id,
-    required this.serviceName,
-    required this.providerName,
-    required this.citizenName,
-    required this.date,
-    this.status = 'pending',
-    this.amount = 0,
-  });
-}
+/// ----------------------------------------------------------------
+/// Legacy mock-only model classes – used by gov screens that have
+/// no backend endpoints yet. Do NOT use for API-connected features.
+/// ----------------------------------------------------------------
 
 class AnalyticsStat {
   final String label;

@@ -1,196 +1,392 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/mock_data.dart';
+import '../../../core/services/governance_service.dart';
+import '../../../core/models/api_models.dart';
 import '../../../shared/theme/app_theme.dart';
 import '../widgets/stat_card.dart';
 
-class GovAnalyticsScreen extends StatelessWidget {
+class GovAnalyticsScreen extends StatefulWidget {
   const GovAnalyticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final stats = MockData.analytics;
-    final bookingsByStatus = <String, int>{};
-    for (final b in MockData.bookings) {
-      bookingsByStatus[b.status] = (bookingsByStatus[b.status] ?? 0) + 1;
-    }
+  State<GovAnalyticsScreen> createState() => _GovAnalyticsScreenState();
+}
 
+class _GovAnalyticsScreenState extends State<GovAnalyticsScreen> {
+  final GovernanceService _governanceService = GovernanceService();
+  GovernanceStats? _stats;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStats();
+  }
+
+  Future<void> _loadStats() async {
+    setState(() => _isLoading = true);
+    final stats = await _governanceService.getDashboardStats();
+    if (mounted) {
+      setState(() {
+        _stats = stats;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(title: const Text("Analytics")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Summary Stats ──
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.5,
-              children: stats.map((s) {
-                return StatCard(
-                  label: s.label,
-                  value: s.value,
-                  icon: _resolveIcon(s.icon),
-                  color: _resolveColor(s.icon),
-                  changePercent: s.changePercent,
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 28),
-
-            // ── Booking Status Breakdown ──
-            const Text("Booking Status Breakdown",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.darkText)),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: bookingsByStatus.entries.map((e) {
-                  final color = _statusColor(e.key);
-                  final total = MockData.bookings.length;
-                  final pct = (e.value / total * 100).round();
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _stats == null
+          ? const Center(child: Text("Failed to load analytics data"))
+          : RefreshIndicator(
+              onRefresh: _loadStats,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ── Summary Stats from API ──
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.5,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(e.key.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: color)),
-                            Text("${e.value} ($pct%)",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600)),
-                          ],
+                        StatCard(
+                          label: 'Total Providers',
+                          value: '${_stats!.providers.totalProviders}',
+                          icon: Icons.people,
+                          color: AppTheme.deepBlue,
                         ),
-                        const SizedBox(height: 6),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: e.value / total,
-                            backgroundColor: Colors.grey.shade200,
-                            valueColor: AlwaysStoppedAnimation(color),
-                            minHeight: 8,
-                          ),
+                        StatCard(
+                          label: 'Verified Providers',
+                          value: '${_stats!.providers.verifiedProviders}',
+                          icon: Icons.verified_user,
+                          color: Colors.green,
+                        ),
+                        StatCard(
+                          label: 'Completed Bookings',
+                          value: '${_stats!.bookings.completed}',
+                          icon: Icons.calendar_today,
+                          color: Colors.blue,
+                        ),
+                        StatCard(
+                          label: 'Total Bookings',
+                          value: '${_stats!.bookings.total}',
+                          icon: Icons.event_available,
+                          color: Colors.teal,
+                        ),
+                        StatCard(
+                          label: 'Local Earnings',
+                          value: _stats!.earnings.formatted,
+                          icon: Icons.account_balance_wallet,
+                          color: Colors.amber.shade700,
+                        ),
+                        StatCard(
+                          label: 'Pending Approvals',
+                          value: '${_stats!.providers.pendingProviders}',
+                          icon: Icons.pending_actions,
+                          color: Colors.orange,
                         ),
                       ],
                     ),
-                  );
-                }).toList(),
+                    const SizedBox(height: 28),
+
+                    // ── Booking Completion Rate ──
+                    const Text(
+                      "Booking Completion Rate",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.darkText,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          _buildProgressRow(
+                            "Completed",
+                            _stats!.bookings.completed,
+                            _stats!.bookings.total,
+                            Colors.blue,
+                          ),
+                          const SizedBox(height: 14),
+                          _buildProgressRow(
+                            "Pending",
+                            _stats!.bookings.total - _stats!.bookings.completed,
+                            _stats!.bookings.total,
+                            Colors.orange,
+                          ),
+                          const SizedBox(height: 14),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "COMPLETION RATE",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.grey,
+                                ),
+                              ),
+                              Text(
+                                "${_stats!.bookings.completionRate.toStringAsFixed(1)}%",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: _stats!.bookings.completionRate >= 50
+                                      ? Colors.green
+                                      : Colors.orange,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // ── Top Skills ──
+                    if (_stats!.topSkills.isNotEmpty) ...[
+                      const Text(
+                        "Top Active Skills",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.darkText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _stats!.topSkills.map((skill) {
+                          final name = skill['skill_category'] ?? 'Unknown';
+                          final count = skill['count'] ?? 0;
+                          return Chip(
+                            avatar: CircleAvatar(
+                              backgroundColor: AppTheme.deepBlue,
+                              child: Text(
+                                "$count",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            label: Text(
+                              name
+                                  .toString()
+                                  .replaceAll('_', ' ')
+                                  .toUpperCase(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 28),
+                    ],
+
+                    // ── Provider Stats ──
+                    const Text(
+                      "Provider Breakdown",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.darkText,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          _buildInfoRow(
+                            "Active Providers",
+                            "${_stats!.providers.activeProviders}",
+                          ),
+                          _buildInfoRow(
+                            "CTEVT Certified",
+                            "${_stats!.providers.ctevtCertified}",
+                          ),
+                          _buildInfoRow(
+                            "Retention Rate",
+                            "${_stats!.providers.retentionRate.toStringAsFixed(1)}%",
+                          ),
+                          _buildInfoRow(
+                            "Pending Verification",
+                            "${_stats!.providers.pendingProviders}",
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // ── Monthly Trend ──
+                    if (_stats!.monthlyTrend.isNotEmpty) ...[
+                      const SizedBox(height: 28),
+                      const Text(
+                        "Monthly Trend (Last 6 Months)",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.darkText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: _stats!.monthlyTrend.map((m) {
+                            final month = m['month'] ?? '';
+                            final bookings = m['bookings'] ?? 0;
+                            final earnings = m['earnings'] ?? 0.0;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 80,
+                                    child: Text(
+                                      month.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppTheme.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "$bookings bookings",
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          "NPR ${earnings.toStringAsFixed(0)}",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 28),
-
-            // ── Service Distribution ──
-            const Text("Provider by Service Type",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.darkText)),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _serviceDistribution().entries.map((e) {
-                return Chip(
-                  avatar: CircleAvatar(
-                    backgroundColor: AppTheme.deepBlue,
-                    child: Text("${e.value}",
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 12)),
-                  ),
-                  label: Text(e.key),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
-  Map<String, int> _serviceDistribution() {
-    final map = <String, int>{};
-    for (final p in MockData.providers) {
-      map[p.service] = (map[p.service] ?? 0) + 1;
-    }
-    return map;
+  Widget _buildProgressRow(String label, int value, int total, Color color) {
+    final pct = total > 0 ? (value / total * 100).round() : 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label.toUpperCase(),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+            Text(
+              "$value ($pct%)",
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: total > 0 ? value / total : 0,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: AlwaysStoppedAnimation(color),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
   }
 
-  Color _statusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'confirmed':
-        return Colors.green;
-      case 'completed':
-        return Colors.blue;
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  IconData _resolveIcon(String name) {
-    switch (name) {
-      case 'people':
-        return Icons.people;
-      case 'calendar_today':
-        return Icons.calendar_today;
-      case 'school':
-        return Icons.school;
-      case 'person_add':
-        return Icons.person_add;
-      case 'account_balance_wallet':
-        return Icons.account_balance_wallet;
-      case 'pending_actions':
-        return Icons.pending_actions;
-      default:
-        return Icons.bar_chart;
-    }
-  }
-
-  Color _resolveColor(String name) {
-    switch (name) {
-      case 'people':
-        return AppTheme.deepBlue;
-      case 'calendar_today':
-        return Colors.green;
-      case 'school':
-        return Colors.purple;
-      case 'person_add':
-        return Colors.teal;
-      case 'account_balance_wallet':
-        return Colors.amber.shade700;
-      case 'pending_actions':
-        return Colors.orange;
-      default:
-        return Colors.indigo;
-    }
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, color: AppTheme.grey),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   }
 }

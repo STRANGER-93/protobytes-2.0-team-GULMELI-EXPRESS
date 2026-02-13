@@ -8,6 +8,8 @@ import '../features/citizen/screens/citizen_provider_list_screen.dart';
 import '../features/citizen/screens/citizen_provider_detail_screen.dart';
 import '../features/citizen/screens/citizen_bookings_screen.dart';
 import '../features/citizen/screens/citizen_profile_screen.dart';
+import '../features/citizen/screens/citizen_booking_detail_screen.dart';
+import '../features/citizen/screens/provider_onboarding_screen.dart';
 import '../features/government/screens/gov_user_management_screen.dart';
 import '../features/government/screens/gov_report_management_screen.dart';
 import '../features/government/screens/gov_announcement_screen.dart';
@@ -20,7 +22,10 @@ import 'state/app_state.dart';
 import 'models/user_role.dart';
 
 class AppRoutes {
-  static Route<dynamic> generateRoute(RouteSettings settings, BuildContext context) {
+  static Route<dynamic> generateRoute(
+    RouteSettings settings,
+    BuildContext context,
+  ) {
     // Get current role from state
     final appState = AppStateProvider.of(context);
     final role = appState.currentUser?.role;
@@ -30,36 +35,63 @@ class AppRoutes {
       case '/':
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case '/signup':
-        return MaterialPageRoute(builder: (_) => const SignupScreen());
+        return MaterialPageRoute(
+          builder: (_) => const SignupScreen(),
+          settings: settings,
+        );
 
       // ── Citizen routes ──────────────────────────
       case '/citizen/dashboard':
-        if (role != UserRole.citizen) return _accessDenied(settings);
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const CitizenNavWrapper());
       case '/citizen/courses':
-        if (role != UserRole.citizen) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const CitizenCourseListScreen());
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
+        return MaterialPageRoute(
+          builder: (_) => const CitizenCourseListScreen(),
+        );
       case '/citizen/course-detail':
-        if (role != UserRole.citizen) return _accessDenied(settings);
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
         return MaterialPageRoute(
           builder: (_) => const CitizenCourseDetailScreen(),
           settings: settings,
         );
       case '/citizen/providers':
-        if (role != UserRole.citizen) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const CitizenProviderListScreen());
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
+        return MaterialPageRoute(
+          builder: (_) => const CitizenProviderListScreen(),
+        );
       case '/citizen/provider-detail':
-        if (role != UserRole.citizen) return _accessDenied(settings);
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
         return MaterialPageRoute(
           builder: (_) => const CitizenProviderDetailScreen(),
           settings: settings,
         );
       case '/citizen/bookings':
-        if (role != UserRole.citizen) return _accessDenied(settings);
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const CitizenBookingsScreen());
       case '/citizen/profile':
-        if (role != UserRole.citizen) return _accessDenied(settings);
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const CitizenProfileScreen());
+      case '/citizen/booking-detail':
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
+        return MaterialPageRoute(
+          builder: (_) => const CitizenBookingDetailScreen(),
+          settings: settings,
+        );
+      case '/citizen/provider-onboarding':
+        if (role != UserRole.citizen && role != UserRole.provider)
+          return _accessDenied(settings);
+        return MaterialPageRoute(
+          builder: (_) => const ProviderOnboardingScreen(),
+        );
 
       // ── Government routes ───────────────────────
       case '/gov/dashboard':
@@ -67,22 +99,32 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const GovDashboardScreen());
       case '/gov/providers':
         if (role != UserRole.government) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const GovProviderManagementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const GovProviderManagementScreen(),
+        );
       case '/gov/bookings':
         if (role != UserRole.government) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const GovBookingManagementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const GovBookingManagementScreen(),
+        );
       case '/gov/training':
         if (role != UserRole.government) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const GovTrainingManagementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const GovTrainingManagementScreen(),
+        );
       case '/gov/analytics':
         if (role != UserRole.government) return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const GovAnalyticsScreen());
       case '/gov/users':
         if (role != UserRole.government) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const GovUserManagementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const GovUserManagementScreen(),
+        );
       case '/gov/reports':
         if (role != UserRole.government) return _accessDenied(settings);
-        return MaterialPageRoute(builder: (_) => const GovReportManagementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const GovReportManagementScreen(),
+        );
       case '/gov/announcements':
         if (role != UserRole.government) return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const GovAnnouncementScreen());

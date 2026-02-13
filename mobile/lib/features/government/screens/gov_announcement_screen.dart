@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/mock_data.dart';
-import '../../../core/models/user_role.dart';
 import '../../../shared/theme/app_theme.dart';
+
+/// Simple local-only announcement model (no backend endpoint exists).
+class _Announcement {
+  final String id;
+  final String title;
+  final String content;
+  final String date;
+  final String target;
+
+  const _Announcement({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.date,
+    required this.target,
+  });
+}
 
 class GovAnnouncementScreen extends StatefulWidget {
   const GovAnnouncementScreen({super.key});
@@ -11,7 +26,7 @@ class GovAnnouncementScreen extends StatefulWidget {
 }
 
 class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
-  final List<Announcement> _announcements = List.from(MockData.recentAnnouncements);
+  final List<_Announcement> _announcements = [];
 
   void _showCreateDialog() {
     String title = '';
@@ -32,12 +47,20 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Create Broadcast", 
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.darkText)),
+            const Text(
+              "Create Broadcast",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.darkText,
+              ),
+            ),
             const SizedBox(height: 20),
             TextField(
               onChanged: (val) => title = val,
-              decoration: const InputDecoration(labelText: "Announcement Title"),
+              decoration: const InputDecoration(
+                labelText: "Announcement Title",
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -46,14 +69,29 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
               decoration: const InputDecoration(labelText: "Detailed Content"),
             ),
             const SizedBox(height: 16),
-            const Text("Target Audience:", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Target Audience:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             Row(
               children: [
-                _targetChip('all', target, (val) => setState(() => target = val)),
+                _targetChip(
+                  'all',
+                  target,
+                  (val) => setState(() => target = val),
+                ),
                 const SizedBox(width: 8),
-                _targetChip('citizens', target, (val) => setState(() => target = val)),
+                _targetChip(
+                  'citizens',
+                  target,
+                  (val) => setState(() => target = val),
+                ),
                 const SizedBox(width: 8),
-                _targetChip('providers', target, (val) => setState(() => target = val)),
+                _targetChip(
+                  'providers',
+                  target,
+                  (val) => setState(() => target = val),
+                ),
               ],
             ),
             const Spacer(),
@@ -63,23 +101,34 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 onPressed: () {
                   if (title.isNotEmpty && content.isNotEmpty) {
                     setState(() {
-                      _announcements.insert(0, Announcement(
-                        id: 'a${DateTime.now().millisecondsSinceEpoch}',
-                        title: title,
-                        content: content,
-                        date: '2026-02-13',
-                        target: target,
-                      ));
+                      _announcements.insert(
+                        0,
+                        _Announcement(
+                          id: 'a${DateTime.now().millisecondsSinceEpoch}',
+                          title: title,
+                          content: content,
+                          date: DateTime.now().toString().substring(0, 10),
+                          target: target,
+                        ),
+                      );
                     });
                     Navigator.pop(context);
                   }
                 },
-                child: const Text("Broadcast Now", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  "Broadcast Now",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -91,7 +140,13 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
   Widget _targetChip(String label, String current, Function(String) onSelect) {
     final isSelected = current == label;
     return ChoiceChip(
-      label: Text(label.toUpperCase(), style: TextStyle(fontSize: 10, color: isSelected ? Colors.white : Colors.teal)),
+      label: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 10,
+          color: isSelected ? Colors.white : Colors.teal,
+        ),
+      ),
       selected: isSelected,
       selectedColor: Colors.teal,
       onSelected: (val) => onSelect(label),
@@ -109,8 +164,14 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
             pinned: true,
             backgroundColor: Colors.teal,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text("System Announcements", 
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              title: const Text(
+                "System Announcements",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
               background: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -122,18 +183,45 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
+          if (_announcements.isEmpty)
+            const SliverFillRemaining(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.campaign_rounded, size: 64, color: Colors.grey),
+                    SizedBox(height: 16),
+                    Text(
+                      "No announcements yet",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "Tap + to create a broadcast",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
                   final announcement = _announcements[index];
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: Colors.teal.withValues(alpha: 0.1)),
+                      side: BorderSide(
+                        color: Colors.teal.withValues(alpha: 0.1),
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -148,49 +236,81 @@ class _GovAnnouncementScreenState extends State<GovAnnouncementScreen> {
                                   color: Colors.teal.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Icon(Icons.campaign_rounded, color: Colors.teal, size: 20),
+                                child: const Icon(
+                                  Icons.campaign_rounded,
+                                  color: Colors.teal,
+                                  size: 20,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: Text(announcement.title, 
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.darkText)),
+                                child: Text(
+                                  announcement.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: AppTheme.darkText,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          Text(announcement.content, style: TextStyle(color: Colors.grey.shade700, height: 1.4)),
+                          Text(
+                            announcement.content,
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              height: 1.4,
+                            ),
+                          ),
                           const Divider(height: 24),
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade100,
                                   borderRadius: BorderRadius.circular(4),
                                 ),
-                                child: Text("TO: ${announcement.target.toUpperCase()}", 
-                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade600)),
+                                child: Text(
+                                  "TO: ${announcement.target.toUpperCase()}",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
                               ),
                               const Spacer(),
-                              Text(announcement.date, style: TextStyle(fontSize: 11, color: Colors.grey.shade400)),
+                              Text(
+                                announcement.date,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade400,
+                                ),
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
                   );
-                },
-                childCount: _announcements.length,
+                }, childCount: _announcements.length),
               ),
             ),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showCreateDialog,
         backgroundColor: Colors.teal,
         icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: const Text("Create Broadcast", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text(
+          "Create Broadcast",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

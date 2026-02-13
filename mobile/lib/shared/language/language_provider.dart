@@ -12,8 +12,13 @@ class LanguageProvider extends StatefulWidget {
   /// Access from anywhere below this widget.
   static LanguageProviderState of(BuildContext context) {
     final state = context.findAncestorStateOfType<LanguageProviderState>();
-    assert(state != null, 'LanguageProvider not found in widget tree');
-    return state!;
+    if (state == null) {
+      throw FlutterError(
+        'LanguageProvider.of() called with a context that does not contain a LanguageProvider.\n'
+        'No LanguageProvider ancestor could be found starting from the context that was passed to LanguageProvider.of().',
+      );
+    }
+    return state;
   }
 }
 

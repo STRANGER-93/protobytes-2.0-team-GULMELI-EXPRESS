@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../shared/theme/app_theme.dart';
+import '../../../core/services/booking_service.dart';
 import '../../../core/state/app_state.dart';
-import '../../../core/data/mock_data.dart';
 import '../../../core/models/api_models.dart';
 import '../widgets/service_icon_card.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -18,6 +18,7 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
     with SingleTickerProviderStateMixin {
   late AppLocalizations l10n;
   late AnimationController _controller;
+  final BookingService _bookingService = BookingService();
   bool _isLoading = false;
   List<Booking> _upcomingBookings = [];
 
@@ -25,30 +26,22 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
     _controller.forward();
     _loadData();
   }
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    // Simulate API call or fetch from mock
-    await Future.delayed(const Duration(milliseconds: 800));
-    setState(() {
-      _upcomingBookings = MockData.bookings
-          .map((b) => Booking(
-                id: int.tryParse(b.id) ?? 0,
-                providerName: b.providerName,
-                citizenName: b.citizenName,
-                service: b.serviceName,
-                status: b.status,
-                paymentStatus: 'pending',
-                amount: 500,
-                scheduledTime: b.date,
-              ))
-          .toList();
-      _isLoading = false;
-    });
+    final results = await _bookingService.getBookings();
+    if (mounted) {
+      setState(() {
+        _upcomingBookings = results;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -59,11 +52,18 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
 
   @override
   Widget build(BuildContext context) {
-    l10n = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(context);
+    if (l == null) {
+      return const Scaffold(
+        body: Center(child: Text('Localizations not initialized.')),
+      );
+    }
+    l10n = l;
     final appState = AppStateProvider.of(context);
     final user = appState.currentUser;
-    if (user == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    
+    if (user == null)
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+
     final isProvider = appState.isProviderMode;
 
     return Scaffold(
@@ -71,7 +71,9 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
       body: RefreshIndicator(
         onRefresh: _loadData,
         child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
           slivers: [
             // Custom App Bar / Header
             SliverToBoxAdapter(
@@ -79,9 +81,9 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
                 padding: const EdgeInsets.fromLTRB(28, 60, 28, 30),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: isProvider 
-                      ? [AppTheme.success, Colors.teal] 
-                      : [AppTheme.deepBlue, AppTheme.crimson],
+                    colors: isProvider
+                        ? [AppTheme.success, Colors.teal]
+                        : [AppTheme.deepBlue, AppTheme.crimson],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -136,15 +138,15 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
                     Row(
                       children: [
                         _buildHeaderStat(
-                          isProvider ? l10n.tasksDone : l10n.bookings, 
-                          isProvider ? "12" : "${_upcomingBookings.length}", 
-                          Icons.calendar_month
+                          isProvider ? l10n.tasksDone : l10n.bookings,
+                          isProvider ? "12" : "${_upcomingBookings.length}",
+                          Icons.calendar_month,
                         ),
                         const SizedBox(width: 16),
                         _buildHeaderStat(
-                          l10n.wallet, 
-                          "Rs. ${user.walletBalance.toInt()}", 
-                          Icons.account_balance_wallet
+                          l10n.wallet,
+                          "Rs. ${user.walletBalance.toInt()}",
+                          Icons.account_balance_wallet,
                         ),
                       ],
                     ),
@@ -158,15 +160,19 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
               padding: const EdgeInsets.all(28),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _buildSectionHeader(isProvider ? l10n.jobRequests : l10n.servicesYouNeed),
+                  _buildSectionHeader(
+                    isProvider ? l10n.jobRequests : l10n.servicesYouNeed,
+                  ),
                   const SizedBox(height: 16),
-                  
+
                   // Category Grid
                   if (!isProvider) _buildServiceCategories(),
                   if (isProvider) _buildProviderStats(),
 
                   const SizedBox(height: 32),
-                  _buildSectionHeader(isProvider ? l10n.activeJobs : l10n.upcomingBookings),
+                  _buildSectionHeader(
+                    isProvider ? l10n.activeJobs : l10n.upcomingBookings,
+                  ),
                   const SizedBox(height: 16),
 
                   if (_isLoading)
@@ -174,7 +180,9 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
                   else if (_upcomingBookings.isEmpty)
                     _buildEmptyState(l10n)
                   else
-                    ..._upcomingBookings.take(3).map((b) => _buildBookingTile(b, isHirer: !isProvider)),
+                    ..._upcomingBookings
+                        .take(3)
+                        .map((b) => _buildBookingTile(b, isHirer: !isProvider)),
                 ]),
               ),
             ),
@@ -210,8 +218,18 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
               ],
             ),
           ],
@@ -223,7 +241,11 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
   Widget _buildServiceCategories() {
     final categories = [
       {'name': l10n.plumber, 'icon': Icons.plumbing, 'color': Colors.blue},
-      {'name': l10n.electrician, 'icon': Icons.electrical_services, 'color': Colors.orange},
+      {
+        'name': l10n.electrician,
+        'icon': Icons.electrical_services,
+        'color': Colors.orange,
+      },
       {'name': l10n.tutor, 'icon': Icons.book, 'color': Colors.purple},
       {'name': l10n.painter, 'icon': Icons.format_paint, 'color': Colors.teal},
     ];
@@ -282,7 +304,14 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
   Widget _buildStatItem(String label, String value, Color color) {
     return Column(
       children: [
-        Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
         const SizedBox(height: 4),
         Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.grey)),
       ],
@@ -302,7 +331,10 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
           const SizedBox(height: 12),
           Text(
             l10n.noUpcomingBookings,
-            style: const TextStyle(color: AppTheme.grey, fontWeight: FontWeight.w500)
+            style: const TextStyle(
+              color: AppTheme.grey,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
@@ -322,72 +354,98 @@ class _CitizenDashboardScreenState extends State<CitizenDashboardScreen>
         statusColor = AppTheme.grey;
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () async {
+        await Navigator.pushNamed(
+          context,
+          '/citizen/booking-detail',
+          arguments: b.id,
+        );
+        _loadData();
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Icon(Icons.calendar_month_rounded, color: statusColor, size: 20),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.calendar_month_rounded,
+                color: statusColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    b.service,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppTheme.darkText,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isHirer ? b.providerName : b.citizenName,
+                    style: const TextStyle(fontSize: 14, color: AppTheme.grey),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(b.service,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: AppTheme.darkText)),
-                const SizedBox(height: 4),
-                Text(isHirer ? b.providerName : b.citizenName,
-                    style: const TextStyle(
-                        fontSize: 14, color: AppTheme.grey)),
+                Text(
+                  b.scheduledTime,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.darkText,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    b.status.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: statusColor,
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(b.scheduledTime,
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.darkText)),
-              const SizedBox(height: 6),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(b.status.toUpperCase(),
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: statusColor)),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

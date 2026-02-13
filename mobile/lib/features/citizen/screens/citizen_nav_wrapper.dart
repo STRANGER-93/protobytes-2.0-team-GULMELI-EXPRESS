@@ -30,9 +30,9 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
   // Provider Screens (Work Mode)
   final _providerScreens = const [
     CitizenDashboardScreen(), // Unified Dashboard
-    Scaffold(body: Center(child: Text("My Services (Coming Soon)"))),
-    Scaffold(body: Center(child: Text("Service Requests (Coming Soon)"))),
-    Scaffold(body: Center(child: Text("Earnings (Coming Soon)"))),
+    CitizenCourseListScreen(), // Browse / manage courses
+    CitizenBookingsScreen(), // Incoming service requests
+    CitizenProviderListScreen(), // Browse other providers
     CitizenProfileScreen(), // Profile is shared to allow switching back
   ];
 
@@ -47,8 +47,8 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
     }
     _lastMode = isProvider;
 
-    // Guard: if somehow a non-citizen accesses this, kick them out
-    if (!appState.isCitizen) {
+    // Guard: if a government user accesses this, kick them out
+    if (appState.isGovernment) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/');
       });
@@ -60,10 +60,7 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
 
     return Scaffold(
       extendBody: true,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: screens,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -92,29 +89,47 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
             items: isProvider
                 ? const [
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.dashboard_rounded), label: "Work"),
+                      icon: Icon(Icons.dashboard_rounded),
+                      label: "Work",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.list_alt_rounded), label: "Services"),
+                      icon: Icon(Icons.list_alt_rounded),
+                      label: "Services",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_active_rounded),
-                        label: "Requests"),
+                      icon: Icon(Icons.notifications_active_rounded),
+                      label: "Requests",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.account_balance_wallet_rounded),
-                        label: "Earnings"),
+                      icon: Icon(Icons.account_balance_wallet_rounded),
+                      label: "Earnings",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.person_rounded), label: "Profile"),
+                      icon: Icon(Icons.person_rounded),
+                      label: "Profile",
+                    ),
                   ]
                 : const [
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.home_filled), label: "Home"),
+                      icon: Icon(Icons.home_filled),
+                      label: "Home",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.school), label: "Courses"),
+                      icon: Icon(Icons.school),
+                      label: "Courses",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.storefront), label: "Services"),
+                      icon: Icon(Icons.storefront),
+                      label: "Services",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_month), label: "Bookings"),
+                      icon: Icon(Icons.calendar_month),
+                      label: "Bookings",
+                    ),
                     BottomNavigationBarItem(
-                        icon: Icon(Icons.person), label: "Profile"),
+                      icon: Icon(Icons.person),
+                      label: "Profile",
+                    ),
                   ],
           ),
         ),
