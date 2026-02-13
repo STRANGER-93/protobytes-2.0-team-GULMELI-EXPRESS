@@ -1,7 +1,7 @@
 // frontend/src/pages/ProviderSearch.jsx
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { providerService } from '../services';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Message from '../components/common/Message';
@@ -27,16 +27,15 @@ export default function ProviderSearch() {
     setLoading(true);
     setError('');
     try {
-      const p = new URLSearchParams();
-      if (f.skill) p.append('skill', f.skill);
-      if (f.min_rating) p.append('min_rating', f.min_rating);
-      if (f.verified_only) p.append('verified_only', 'true');
-      if (f.search) p.append('search', f.search);
-
-      const res = await api.get(`/providers/search/?${p.toString()}`);
-      const results = res.data.results ?? res.data;
+      const res = await providerService.searchProviders({
+        skill: f.skill || undefined,
+        min_rating: f.min_rating || undefined,
+        verified_only: f.verified_only || undefined,
+        search: f.search || undefined,
+      });
+      const results = res.results ?? res;
       setProviders(results);
-      setTotal(res.data.count ?? results.length);
+      setTotal(res.count ?? results.length);
     } catch {
       setError('Failed to load providers. Please try again.');
     } finally {

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { governanceService, providerService } from '../services';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
@@ -24,11 +24,11 @@ export default function MunicipalDashboard() {
     setError('');
     try {
       const [sRes, pRes] = await Promise.all([
-        api.get('/governance/dashboard/'),
-        api.get('/providers/pending-verification/'),
+        governanceService.getMunicipalityDashboard(),
+        providerService.getPendingVerification(),
       ]);
-      setStats(sRes.data);
-      const pending = pRes.data.results ?? pRes.data ?? [];
+      setStats(sRes);
+      const pending = pRes.results ?? pRes ?? [];
       setPendingProviders(pending);
     } catch (err) {
       setError('Failed to load dashboard data.');
@@ -42,7 +42,7 @@ export default function MunicipalDashboard() {
   const handleVerify = async (providerId, verifyData) => {
     setVerifying(providerId);
     try {
-      await api.patch(`/providers/${providerId}/verify/`, verifyData);
+      await providerService.verifyProvider(providerId, verifyData);
       await load();
     } catch (err) {
       setError(err.response?.data?.detail || 'Verification failed.');
@@ -94,8 +94,8 @@ export default function MunicipalDashboard() {
                   transition: 'all var(--t-base)',
                   cursor: 'default',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'var(--saffron)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = 'var(--saffron)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}
                 >
                   <div style={{ fontSize: '1.5rem', marginBottom: 'var(--space-3)' }}>{s.icon}</div>
                   <div style={{ fontSize: '1.375rem', fontWeight: 800, color: s.color, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 'var(--space-1)' }}>

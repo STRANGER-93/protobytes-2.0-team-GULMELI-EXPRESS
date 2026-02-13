@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { bookingService } from '../services';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
@@ -24,11 +24,11 @@ export default function MyBookings() {
     setLoading(true);
     setError('');
     try {
-      const params = new URLSearchParams();
-      params.append('role', isProvider ? 'provider' : 'citizen');
-      if (statusFilter) params.append('status', statusFilter);
-      const res = await api.get(`/bookings/?${params.toString()}`);
-      setBookings(res.data.results ?? res.data ?? []);
+      const res = await bookingService.listBookings({
+        role: isProvider ? 'provider' : 'citizen',
+        status: statusFilter || undefined,
+      });
+      setBookings(res.results ?? res ?? []);
     } catch {
       setError('Failed to load bookings.');
     } finally {
@@ -40,7 +40,9 @@ export default function MyBookings() {
 
   const handleAction = async (bookingId, action) => {
     try {
-      await api.patch(`/bookings/${bookingId}/${action}/`);
+      if (action === 'confirm') await bookingService.confirmBooking(bookingId);
+      else if (action === 'complete') await bookingService.completeBooking(bookingId);
+      else if (action === 'cancel') await bookingService.cancelBooking(bookingId, { cancellation_reason: 'User cancelled' });
       load();
     } catch (err) {
       setError(err.response?.data?.detail || `Failed to ${action} booking.`);
@@ -113,16 +115,16 @@ export default function MyBookings() {
                   overflow: 'hidden',
                   transition: 'box-shadow var(--t-base)',
                 }}
-                onMouseEnter={e => e.currentTarget.style.boxShadow = 'var(--shadow-md)'}
-                onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow = 'var(--shadow-md)'}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
                 >
                   {/* Status bar */}
                   <div style={{
                     height: '3px',
                     background: b.status === 'completed' ? 'var(--success)'
                       : b.status === 'confirmed' ? 'var(--info)'
-                      : b.status === 'cancelled' ? 'var(--slate-300)'
-                      : 'var(--saffron)',
+                        : b.status === 'cancelled' ? 'var(--slate-300)'
+                          : 'var(--saffron)',
                   }} />
 
                   <div style={{ padding: 'var(--space-5)' }}>

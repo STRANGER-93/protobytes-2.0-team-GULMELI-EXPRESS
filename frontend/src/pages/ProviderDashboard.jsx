@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { providerService, bookingService } from '../services';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
@@ -23,11 +23,11 @@ export default function ProviderDashboard() {
     const load = async () => {
       try {
         const [pRes, bRes] = await Promise.all([
-          api.get('/providers/me/'),
-          api.get('/bookings/?role=provider'),
+          providerService.getMyProfile(),
+          bookingService.listBookings({ role: 'provider' }),
         ]);
-        setProfile(pRes.data);
-        const bookings = bRes.data.results ?? bRes.data ?? [];
+        setProfile(pRes);
+        const bookings = bRes.results ?? bRes ?? [];
         setRecentBookings(bookings.slice(0, 5));
       } catch (err) {
         if (err.response?.status === 404) {
@@ -105,8 +105,8 @@ export default function ProviderDashboard() {
               padding: 'var(--space-5)',
               transition: 'all var(--t-base)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <div style={{ fontSize: '1.5rem', marginBottom: 'var(--space-3)' }}>{s.icon}</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800, color: s.color, letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 'var(--space-1)' }}>

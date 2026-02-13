@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { providerService, authService } from '../services';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
@@ -29,7 +29,7 @@ export default function ProviderOnboarding() {
   useEffect(() => {
     const check = async () => {
       try {
-        await api.get('/providers/me/');
+        await providerService.getMyProfile();
         navigate('/provider/dashboard', { replace: true });
       } catch (err) {
         if (err.response?.status !== 404) console.error(err);
@@ -59,20 +59,17 @@ export default function ProviderOnboarding() {
 
     setLoading(true);
     try {
-      const fd = new FormData();
-      fd.append('skill_categories', JSON.stringify(selectedSkills));
-      fd.append('bio', bio);
-      fd.append('experience_years', expYears);
-      fd.append('ctevt_status', ctevtStatus);
-      fd.append('citizenship_photo', citizenshipFile);
-      if (ctevtLink) fd.append('ctevt_certificate_link', ctevtLink);
-      if (ctevtFile) fd.append('ctevt_certificate_upload', ctevtFile);
-
-      await api.post('/providers/register/', fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      await providerService.register({
+        skill_categories: selectedSkills,
+        bio,
+        experience_years: expYears,
+        ctevt_status: ctevtStatus,
+        citizenship_photo: citizenshipFile,
+        ctevt_certificate_link: ctevtLink || undefined,
+        ctevt_certificate_upload: ctevtFile || undefined,
       });
 
-      const profileRes = await api.get('/auth/me/');
+      const profileRes = await authService.getProfile();
       updateUser(profileRes.data);
       navigate('/provider/dashboard');
     } catch (err) {

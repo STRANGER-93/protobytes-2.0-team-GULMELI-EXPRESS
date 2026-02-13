@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { providerService, reviewService } from '../services';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
@@ -24,13 +24,13 @@ export default function ProviderDetail() {
     const load = async () => {
       try {
         const [pRes, rRes] = await Promise.allSettled([
-          api.get(`/providers/${id}/`),
-          api.get(`/reviews/?provider=${id}`),
+          providerService.getProviderDetail(id),
+          reviewService.getProviderReviews(id),
         ]);
-        if (pRes.status === 'fulfilled') setProvider(pRes.value.data);
+        if (pRes.status === 'fulfilled') setProvider(pRes.value);
         else throw new Error('Provider not found');
         if (rRes.status === 'fulfilled') {
-          setReviews(rRes.value.data.results ?? rRes.value.data ?? []);
+          setReviews(rRes.value.results ?? rRes.value ?? []);
         }
       } catch {
         setError('Failed to load provider details.');

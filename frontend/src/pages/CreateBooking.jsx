@@ -1,7 +1,7 @@
 // frontend/src/pages/CreateBooking.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../services/api';
+import { providerService, bookingService } from '../services';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
@@ -32,11 +32,11 @@ export default function CreateBooking() {
     if (!providerIdFromQuery) return;
     const load = async () => {
       try {
-        const res = await api.get(`/providers/${providerIdFromQuery}/`);
-        setProvider(res.data);
+        const data = await providerService.getProviderDetail(providerIdFromQuery);
+        setProvider(data);
         // Pre-select first skill if only one
-        if (res.data.skill_categories?.length === 1) {
-          setForm(f => ({ ...f, skill_category: res.data.skill_categories[0] }));
+        if (data.skill_categories?.length === 1) {
+          setForm(f => ({ ...f, skill_category: data.skill_categories[0] }));
         }
       } catch {
         setError('Could not load provider details.');
@@ -52,14 +52,15 @@ export default function CreateBooking() {
     setError('');
     setLoading(true);
     try {
-      const res = await api.post('/bookings/', {
+      const booking = await bookingService.createBooking({
         provider: parseInt(form.provider),
         skill_category: form.skill_category,
         scheduled_time: form.scheduled_time,
         description: form.description,
+        location_address: 'Not specified',
         amount: parseFloat(form.amount),
       });
-      navigate(`/bookings/${res.data.id}?created=true`);
+      navigate(`/bookings/${booking.id}?created=true`);
     } catch (err) {
       const d = err.response?.data;
       setError(d?.detail || d?.non_field_errors?.[0] || JSON.stringify(d) || 'Failed to create booking.');

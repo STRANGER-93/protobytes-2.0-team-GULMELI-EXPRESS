@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import { bookingService, paymentService, reviewService } from '../services';
 import Card from '../components/common/Card';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
@@ -29,8 +29,8 @@ export default function BookingDetail() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/bookings/${id}/`);
-      setBooking(res.data);
+      const data = await bookingService.getBookingDetail(id);
+      setBooking(data);
     } catch {
       setError('Booking not found.');
     } finally {
@@ -44,7 +44,9 @@ export default function BookingDetail() {
     setActionLoading(action);
     setError('');
     try {
-      await api.patch(`/bookings/${id}/${action}/`);
+      if (action === 'confirm') await bookingService.confirmBooking(id);
+      else if (action === 'complete') await bookingService.completeBooking(id);
+      else if (action === 'cancel') await bookingService.cancelBooking(id, { cancellation_reason: 'User cancelled' });
       await load();
       setSuccess(`Booking ${action}ed successfully.`);
     } catch (err) {
@@ -57,14 +59,15 @@ export default function BookingDetail() {
   const handlePayment = async () => {
     setActionLoading('pay');
     try {
-      const res = await api.post('/payments/mock/initiate/', {
-        booking_id: booking.id,
+      const res = await paymentService.initiatePayment({
+        booking: booking.id,
         amount: booking.amount,
+        payment_method: 'mock',
       });
       // Simulate 2s payment processing
       setTimeout(async () => {
         try {
-          await api.get(`/payments/mock/callback/?reference=${res.data.reference}&status=success`);
+          await paymentService.verifyPayment({ payment_reference: res.reference });
           await load();
           setSuccess('💳 Payment successful! Booking is now confirmed.');
         } catch {
@@ -83,7 +86,7 @@ export default function BookingDetail() {
     e.preventDefault();
     setSubmittingReview(true);
     try {
-      await api.post('/reviews/', {
+      await reviewService.createReview({
         booking: booking.id,
         rating: reviewForm.rating,
         comment: reviewForm.comment,
@@ -127,8 +130,8 @@ export default function BookingDetail() {
             height: '4px',
             background: booking.status === 'completed' ? 'var(--success)'
               : booking.status === 'confirmed' ? 'var(--info)'
-              : booking.status === 'cancelled' ? 'var(--slate-300)'
-              : 'var(--saffron)',
+                : booking.status === 'cancelled' ? 'var(--slate-300)'
+                  : 'var(--saffron)',
             borderRadius: 'var(--r-xl) var(--r-xl) 0 0',
             marginTop: 'calc(-1 * var(--space-6))',
             marginLeft: 'calc(-1 * var(--space-6))',
