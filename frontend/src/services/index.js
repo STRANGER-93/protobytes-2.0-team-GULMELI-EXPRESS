@@ -8,5 +8,6 @@ export { reviewService } from './reviews';
 export { municipalityService } from './municipalities';
 export { paymentService } from './payments';
 export { governanceService } from './governance';
+export { courseService } from './courses';
 export { storage } from './storage';
 export { default as api } from './api';

@@ -43,7 +43,7 @@ function GuestHome() {
             }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--saffron)', display: 'inline-block' }} />
               <span style={{ fontSize: '1.0125rem', fontWeight: 600, color: 'var(--saffron)', letterSpacing: '0.04em' }}>
-                सिप | सेवा | स्वरोजगार | 
+                सिप | सेवा | स्वरोजगार |
               </span>
             </div>
 
@@ -80,7 +80,7 @@ function GuestHome() {
         <div className="grid grid-4">
           {[
             { icon: '🎓', num: '01', title: 'Skill Layer', desc: 'CTEVT certification tracking for Nepal\'s skilled workers' },
-            { icon: '✓',  num: '02', title: 'Trust Layer', desc: 'Municipal verification + job history + reviews build credibility' },
+            { icon: '✓', num: '02', title: 'Trust Layer', desc: 'Municipal verification + job history + reviews build credibility' },
             { icon: '📋', num: '03', title: 'Market Layer', desc: 'Local-first bookings — money stays municipal' },
             { icon: '📊', num: '04', title: 'Governance', desc: 'Jobs created, verified providers, bookings, earnings' },
           ].map(item => (
@@ -134,6 +134,22 @@ function GuestHome() {
             </p>
             <Button onClick={() => navigate('/register')}>
               Register as Provider
+            </Button>
+          </div>
+        </div>
+
+        {/* Courses Section */}
+        <div className="container" style={{ padding: 'var(--space-12) var(--space-6)', background: 'var(--slate-50)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
+            <p className="section-title">Upskilling Opportunities</p>
+            <h2 style={{ letterSpacing: '-0.02em' }}>Apply for Training Courses</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', marginTop: 'var(--space-3)' }}>
+              Municipality-organized training programs to enhance your professional skills
+            </p>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button size="lg" onClick={() => navigate('/courses')}>
+              Browse Courses →
             </Button>
           </div>
         </div>
@@ -226,6 +242,15 @@ function ProviderHome({ user }) {
             </p>
             <Button block variant="secondary" onClick={() => navigate('/profile')}>Edit Profile</Button>
           </Card>
+
+          <Card>
+            <div style={{ fontSize: '2rem', marginBottom: 'var(--space-4)' }}>📚</div>
+            <h3 style={{ marginBottom: 'var(--space-2)' }}>My Courses</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: 'var(--space-5)' }}>
+              View your enrolled training courses.
+            </p>
+            <Button block variant="secondary" onClick={() => navigate('/provider/courses')}>View Courses</Button>
+          </Card>
         </div>
       </div>
     </div>
@@ -260,6 +285,15 @@ function AdminHome({ user }) {
               Review and verify service providers in your municipality.
             </p>
             <Button block variant="secondary" onClick={() => navigate('/admin/providers')}>Verify Providers</Button>
+          </Card>
+
+          <Card>
+            <div style={{ fontSize: '2rem', marginBottom: 'var(--space-4)' }}>📚</div>
+            <h3 style={{ marginBottom: 'var(--space-2)' }}>Manage Courses</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', marginBottom: 'var(--space-5)' }}>
+              Create and manage training courses for providers.
+            </p>
+            <Button block variant="secondary" onClick={() => navigate('/admin/courses')}>Manage Courses</Button>
           </Card>
         </div>
       </div>

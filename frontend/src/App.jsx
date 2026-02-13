@@ -22,6 +22,10 @@ import BookingDetail from './pages/BookingDetail';
 import ProviderDashboard from './pages/ProviderDashboard';
 import MunicipalDashboard from './pages/MunicipalDashboard';
 import Profile from './pages/Profile';
+import Courses from './pages/Courses';
+import CourseDetail from './pages/CourseDetail';
+import MyCourses from './pages/MyCourses';
+import ManageCourses from './pages/ManageCourses';
 
 // ── Route Guards ────────────────────────────────────────
 
@@ -164,6 +168,35 @@ function AppRoutes() {
         <AppLayout>
           <ProtectedRoute allowedRoles={['municipality_admin']}>
             <MunicipalDashboard />
+          </ProtectedRoute>
+        </AppLayout>
+      } />
+
+      {/* ── Courses (public + authenticated) ── */}
+      <Route path="/courses" element={
+        <AppLayout>
+          <Courses />
+        </AppLayout>
+      } />
+
+      <Route path="/courses/:id" element={
+        <AppLayout>
+          <CourseDetail />
+        </AppLayout>
+      } />
+
+      <Route path="/provider/courses" element={
+        <AppLayout>
+          <ProtectedRoute allowedRoles={['provider']}>
+            <MyCourses />
+          </ProtectedRoute>
+        </AppLayout>
+      } />
+
+      <Route path="/admin/courses" element={
+        <AppLayout>
+          <ProtectedRoute allowedRoles={['municipality_admin']}>
+            <ManageCourses />
           </ProtectedRoute>
         </AppLayout>
       } />
