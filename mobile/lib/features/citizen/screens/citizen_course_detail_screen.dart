@@ -4,9 +4,7 @@ import '../../../core/models/user_role.dart';
 import '../../../shared/theme/app_theme.dart';
 
 class CitizenCourseDetailScreen extends StatefulWidget {
-  final String courseId;
-
-  const CitizenCourseDetailScreen({super.key, required this.courseId});
+  const CitizenCourseDetailScreen({super.key});
 
   @override
   State<CitizenCourseDetailScreen> createState() =>
@@ -15,16 +13,26 @@ class CitizenCourseDetailScreen extends StatefulWidget {
 
 class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
     with SingleTickerProviderStateMixin {
-  late Course _course;
+  Course? _course;
   bool _enrolled = false;
   late AnimationController _controller;
+  bool _isInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final arguments = ModalRoute.of(context)!.settings.arguments;
+      final courseId = arguments is String ? arguments : '';
+      _course = MockData.courses.firstWhere((c) => c.id == courseId,
+          orElse: () => MockData.courses.first);
+      _isInitialized = true;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _course = MockData.courses.firstWhere((c) => c.id == widget.courseId,
-        orElse: () => MockData.courses.first);
-    
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1500));
     _controller.forward();
@@ -40,7 +48,7 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
     setState(() => _enrolled = true);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Enrolled in ${_course.title}!"),
+        content: Text("Enrolled in ${_course!.title}!"),
         backgroundColor: AppTheme.success,
         behavior: SnackBarBehavior.floating,
       ),
@@ -49,6 +57,11 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (_course == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    final c = _course!;
+
     return Scaffold(
       backgroundColor: AppTheme.offWhite,
       body: CustomScrollView(
@@ -60,7 +73,7 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
             stretch: true,
             backgroundColor: AppTheme.deepBlue,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(_course.title,
+              title: Text(c.title,
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -91,7 +104,7 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
                             color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text(_course.level.toUpperCase(),
+                          child: Text(c.level.toUpperCase(),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -118,7 +131,7 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
                             fontWeight: FontWeight.bold,
                             color: AppTheme.darkText)),
                     const SizedBox(height: 12),
-                    Text(_course.description,
+                    Text(c.description,
                         style: TextStyle(
                             color: Colors.grey.shade700,
                             height: 1.6,
@@ -135,9 +148,9 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _buildStat(Icons.timer_outlined, "Duration",
-                            _course.duration, Colors.blue),
+                            c.duration, Colors.blue),
                         _buildStat(Icons.people_outline, "Learners",
-                            "${_course.enrolledCount}", Colors.orange),
+                            "${c.enrolledCount}", Colors.orange),
                         _buildStat(Icons.star_outline, "Rating", "4.8",
                             Colors.amber),
                       ],
@@ -183,7 +196,7 @@ class _CitizenCourseDetailScreenState extends State<CitizenCourseDetailScreen>
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_course.instructor,
+                              Text(c.instructor,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16)),

@@ -16,6 +16,7 @@ class CitizenNavWrapper extends StatefulWidget {
 
 class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
   int _selectedIndex = 0;
+  bool? _lastMode;
 
   // Citizen Screens (Hire Mode)
   final _citizenScreens = const [
@@ -27,9 +28,8 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
   ];
 
   // Provider Screens (Work Mode)
-  // TODO: Replace placeholders with actual provider screens when available
   final _providerScreens = const [
-    Scaffold(body: Center(child: Text("Provider Dashboard (Coming Soon)"))),
+    CitizenDashboardScreen(), // Unified Dashboard
     Scaffold(body: Center(child: Text("My Services (Coming Soon)"))),
     Scaffold(body: Center(child: Text("Service Requests (Coming Soon)"))),
     Scaffold(body: Center(child: Text("Earnings (Coming Soon)"))),
@@ -39,6 +39,13 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
   @override
   Widget build(BuildContext context) {
     final appState = AppStateProvider.of(context);
+    final isProvider = appState.isProviderMode;
+
+    // Reset index to dashboard when switching modes
+    if (_lastMode != null && _lastMode != isProvider) {
+      _selectedIndex = 0;
+    }
+    _lastMode = isProvider;
 
     // Guard: if somehow a non-citizen accesses this, kick them out
     if (!appState.isCitizen) {
@@ -48,13 +55,15 @@ class _CitizenNavWrapperState extends State<CitizenNavWrapper> {
       return const SizedBox.shrink();
     }
 
-    final isProvider = appState.isProviderMode;
     final screens = isProvider ? _providerScreens : _citizenScreens;
-    final themeColor = isProvider ? AppTheme.success : Colors.indigo;
+    final themeColor = isProvider ? AppTheme.success : AppTheme.deepBlue;
 
     return Scaffold(
       extendBody: true,
-      body: screens[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: screens,
+      ),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(

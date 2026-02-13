@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/data/mock_data.dart';
+import '../../../core/models/user_role.dart';
 import '../../../shared/theme/app_theme.dart';
 
 class GovUserManagementScreen extends StatefulWidget {
@@ -92,7 +93,8 @@ class _GovUserManagementScreenState extends State<GovUserManagementScreen> {
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade500)),
                       trailing: Switch.adaptive(
                         value: isActive,
-                        activeColor: AppTheme.success,
+                        activeTrackColor: AppTheme.success.withValues(alpha: 0.5),
+                        activeThumbColor: AppTheme.success,
                         onChanged: (val) => setState(() => _userStatus[user.id] = val),
                       ),
                       childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

@@ -56,7 +56,7 @@ class CitizenProfileScreen extends StatelessWidget {
                             radius: 50,
                             backgroundColor: AppTheme.offWhite,
                             child: Text(
-                              user.name[0].toUpperCase(),
+                              user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
                               style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class CitizenProfileScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                         const SizedBox(height: 4),
-                        Text(user.email,
+                        Text(user.phone,
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.white70)),
                       ],
@@ -98,12 +98,13 @@ class CitizenProfileScreen extends StatelessWidget {
                       "Wallet Balance",
                       "Rs. ${user.walletBalance.toInt()}",
                       AppTheme.success),
-                  _buildProfileTile(Icons.location_on_rounded, "Location",
+                  _buildProfileTile(Icons.location_on_rounded, "Municipality",
                       user.location, AppTheme.deepBlue),
-                  _buildProfileTile(Icons.email_rounded, "Email", user.email,
+                  _buildProfileTile(Icons.phone_rounded, "Phone Number", user.phone,
                       AppTheme.deepBlue),
-                  _buildProfileTile(Icons.language_rounded, "Language",
-                      "Nepali / English", Colors.purple),
+                  if (user.email.isNotEmpty)
+                    _buildProfileTile(Icons.email_rounded, "Email", user.email,
+                        AppTheme.deepBlue),
 
                   const SizedBox(height: 32),
                   const Text("Switch Role",
@@ -189,7 +190,7 @@ class CitizenProfileScreen extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   _buildActionTile(
-                      Icons.lock_outline_rounded, "Change Password", () {}),
+                      Icons.lock_outline_rounded, "Security Settings", () {}),
                   _buildActionTile(
                       Icons.notifications_outlined, "Notifications", () {}),
                   _buildActionTile(
@@ -202,7 +203,7 @@ class CitizenProfileScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         appState.logout();
-                        Navigator.pushReplacementNamed(context, '/');
+                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
                       },
                       icon: const Icon(Icons.logout_rounded,
                           color: Colors.white),
@@ -221,7 +222,7 @@ class CitizenProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 80),
                 ],
               ),
             ),
@@ -258,21 +259,23 @@ class CitizenProfileScreen extends StatelessWidget {
             child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      color: AppTheme.grey,
-                      fontWeight: FontWeight.w500)),
-              const SizedBox(height: 4),
-              Text(value,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.darkText)),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style: const TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.grey,
+                        fontWeight: FontWeight.w500)),
+                const SizedBox(height: 4),
+                Text(value,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.darkText)),
+              ],
+            ),
           ),
         ],
       ),

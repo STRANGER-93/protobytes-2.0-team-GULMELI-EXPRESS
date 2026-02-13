@@ -13,6 +13,9 @@ import '../features/government/screens/gov_report_management_screen.dart';
 import '../features/government/screens/gov_announcement_screen.dart';
 import '../features/government/screens/gov_training_management_screen.dart';
 import '../features/government/screens/gov_analytics_screen.dart';
+import '../features/government/screens/gov_dashboard_screen.dart';
+import '../features/government/screens/gov_provider_management_screen.dart';
+import '../features/government/screens/gov_booking_management_screen.dart';
 import 'state/app_state.dart';
 import 'models/user_role.dart';
 
@@ -38,18 +41,18 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CitizenCourseListScreen());
       case '/citizen/course-detail':
         if (role != UserRole.citizen) return _accessDenied(settings);
-        final courseId = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => CitizenCourseDetailScreen(courseId: courseId ?? ''),
+          builder: (_) => const CitizenCourseDetailScreen(),
+          settings: settings,
         );
       case '/citizen/providers':
         if (role != UserRole.citizen) return _accessDenied(settings);
         return MaterialPageRoute(builder: (_) => const CitizenProviderListScreen());
       case '/citizen/provider-detail':
         if (role != UserRole.citizen) return _accessDenied(settings);
-        final providerId = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => CitizenProviderDetailScreen(providerId: providerId ?? ''),
+          builder: (_) => const CitizenProviderDetailScreen(),
+          settings: settings,
         );
       case '/citizen/bookings':
         if (role != UserRole.citizen) return _accessDenied(settings);

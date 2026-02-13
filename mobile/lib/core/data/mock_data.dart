@@ -7,6 +7,7 @@ class MockData {
   static const citizenUser = AppUser(
     id: 'c1',
     name: 'Abdhesh',
+    phone: '9801234567',
     role: UserRole.citizen,
     location: 'Ward 1, Kathmandu',
     walletBalance: 8620,
@@ -16,6 +17,7 @@ class MockData {
   static const governmentUser = AppUser(
     id: 'g1',
     name: 'Admin Officer',
+    phone: '9841000000',
     role: UserRole.government,
     location: 'Ministry of IT, Singha Durbar',
     email: 'admin@gov.np',
@@ -210,6 +212,7 @@ class MockData {
     AppUser(
       id: 'c2',
       name: 'Ram Bir',
+      phone: '9801111111',
       role: UserRole.citizen,
       location: 'Ward 2, Kathmandu',
       walletBalance: 1200,
@@ -218,6 +221,7 @@ class MockData {
     AppUser(
       id: 'c3',
       name: 'Sita Maya',
+      phone: '9802222222',
       role: UserRole.citizen,
       location: 'Ward 5, Lalitpur',
       walletBalance: 4500,

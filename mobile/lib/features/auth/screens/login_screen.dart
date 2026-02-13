@@ -15,50 +15,93 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _username = TextEditingController();
-  final _password = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _otpController = TextEditingController();
   final _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+  
   bool _isLoading = false;
-  bool _obscurePassword = true;
+  bool _otpSent = false;
+  UserRole _selectedRole = UserRole.citizen;
 
-  void _login() async {
+  String _getBackendRole(UserRole role) {
+    return role == UserRole.government ? 'municipality_admin' : 'citizen';
+  }
+
+  void _sendOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
-    final success = await _authService.login(_username.text, _password.text);
-    setState(() => _isLoading = false);
-
-    if (success) {
+    try {
+      await _authService.sendOTP(
+        _phoneController.text.trim(),
+      );
+      setState(() {
+        _isLoading = false;
+        _otpSent = true;
+      });
       if (mounted) {
-        // Default to citizen on real login
-        AppStateProvider.of(context).loginAs(UserRole.citizen);
-        Navigator.pushReplacementNamed(context, "/citizen/dashboard");
-      }
-    } else {
-      if (mounted) {
-        final l = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l.loginFailed)),
+          const SnackBar(content: Text("OTP sent successfully (Dev: 123456)")),
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      if (mounted) {
+        String message = e.toString().replaceFirst('Exception: ', '');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error: $message"),
+            backgroundColor: AppTheme.crimson,
+          ),
         );
       }
     }
   }
 
-  void _loginAsCitizen() {
-    AppStateProvider.of(context).loginAs(UserRole.citizen);
-    Navigator.pushReplacementNamed(context, "/citizen/dashboard");
+  Future<void> _verifyOTP() async {
+    if (_otpController.text.length < 4) return;
+
+    setState(() => _isLoading = true);
+    final user = await _authService.verifyOTP(
+      phone: _phoneController.text.trim(),
+      otp: _otpController.text.trim(),
+      // Backend requires name/municipality for new users.
+      // Since we removed name field, we set a default here.
+      name: "JanSewa User", 
+      role: _getBackendRole(_selectedRole),
+      municipality: 1, // Matches our seeded municipality
+    );
+    setState(() => _isLoading = false);
+
+    if (user != null && mounted) {
+      final appState = AppStateProvider.of(context);
+      appState.setRealUser(user);
+
+      String nextRoute = '/citizen';
+      if (user.role == UserRole.government) {
+        nextRoute = '/government';
+      }
+
+      Navigator.pushReplacementNamed(context, nextRoute);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Invalid OTP or Verification Failed"),
+            backgroundColor: AppTheme.crimson,
+          ),
+        );
+      }
+    }
   }
 
-  void _loginAsGovernment() {
-    AppStateProvider.of(context).loginAs(UserRole.government);
-    Navigator.pushReplacementNamed(context, "/gov/dashboard");
-  }
 
   @override
   void dispose() {
-    _username.dispose();
-    _password.dispose();
+    _phoneController.dispose();
+    _otpController.dispose();
+
     super.dispose();
   }
 
@@ -77,218 +120,106 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 12),
-
-                  // — Language toggle —
+                  // Language toggle
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
                       onPressed: () => lang.toggle(),
                       icon: const Icon(Icons.language, size: 20),
-                      label: Text(
-                        lang.isNepali ? 'EN' : 'ने',
-                        style: GoogleFonts.mukta(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppTheme.deepBlue,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: const BorderSide(
-                            color: AppTheme.deepBlue,
-                            width: 1,
-                          ),
-                        ),
-                      ),
+                      label: Text(lang.isNepali ? 'EN' : 'ने'),
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // — Nepal-themed header —
+                  
+                  // Nepal-themed header
                   Container(
                     width: 100,
                     height: 100,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [AppTheme.crimson, AppTheme.deepBlue],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.crimson.withValues(alpha: 0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
                     ),
-                    child: const Center(
-                      child: Text('🙏', style: TextStyle(fontSize: 40)),
-                    ),
+                    child: const Center(child: Text('🙏', style: TextStyle(fontSize: 40))),
                   ),
                   const SizedBox(height: 20),
-
-                  Text(
-                    l.namaste,
-                    style: GoogleFonts.mukta(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.darkText,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l.welcomeJanSawa,
-                    style: GoogleFonts.mukta(fontSize: 16, color: AppTheme.grey),
-                  ),
+                  Text(l.namaste, style: GoogleFonts.mukta(fontSize: 32, fontWeight: FontWeight.bold)),
+                  Text(l.welcomeJanSawa, style: GoogleFonts.mukta(fontSize: 16, color: AppTheme.grey)),
                   const SizedBox(height: 40),
 
-                  // — Username —
-                  TextFormField(
-                    controller: _username,
-                    decoration: InputDecoration(
-                      labelText: l.username,
-                      hintText: l.usernameHint,
-                      prefixIcon: const Icon(Icons.person_outline),
-                    ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? l.usernameRequired : null,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // — Password —
-                  TextFormField(
-                    controller: _password,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: l.password,
-                      hintText: l.passwordHint,
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                        ),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
-                      ),
-                    ),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return l.passwordRequired;
-                      if (v.length < 4) return l.passwordMin4;
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 8),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(l.forgotPassword),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // — Login button —
-                  _isLoading
-                      ? const SizedBox(
-                          height: 52,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppTheme.crimson,
-                            ),
-                          ),
-                        )
-                      : ElevatedButton(onPressed: _login, child: Text(l.login)),
-                  const SizedBox(height: 20),
-
-                  // — Divider —
+                  // Role Selection
                   Row(
                     children: [
-                      const Expanded(child: Divider()),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          l.or,
-                          style: GoogleFonts.mukta(
-                            color: AppTheme.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      const Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // — Sign up button —
-                  OutlinedButton(
-                    onPressed: () => Navigator.pushNamed(context, '/signup'),
-                    child: Text(l.createAccount),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // — Role-based Demo Login —
-                  Text(
-                    "Quick Demo Access",
-                    style: GoogleFonts.mukta(
-                      fontSize: 14,
-                      color: AppTheme.grey,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      // Citizen demo
                       Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _loginAsCitizen,
-                          icon: const Icon(Icons.person, size: 18),
+                        child: ChoiceChip(
                           label: const Text("Citizen"),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppTheme.deepBlue,
-                            side: const BorderSide(color: AppTheme.deepBlue),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
+                          selected: _selectedRole == UserRole.citizen,
+                          onSelected: (val) => setState(() => _selectedRole = UserRole.citizen),
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Government demo
                       Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _loginAsGovernment,
-                          icon: const Icon(Icons.account_balance, size: 18),
+                        child: ChoiceChip(
                           label: const Text("Government"),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppTheme.crimson,
-                            side: const BorderSide(color: AppTheme.crimson),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
+                          selected: _selectedRole == UserRole.government,
+                          onSelected: (val) => setState(() => _selectedRole = UserRole.government),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 24),
 
-                  // — Footer —
-                  Text(
-                    l.madeForNepal,
-                    style: GoogleFonts.mukta(fontSize: 12, color: AppTheme.grey),
-                  ),
-                  const SizedBox(height: 20),
+                  if (!_otpSent) ...[
+                    // Step 1: Phone Number
+                    TextFormField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        labelText: "Phone Number",
+                        hintText: "98XXXXXXXX",
+                        prefixIcon: const Icon(Icons.phone_android),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return "Enter phone number";
+                        if (!v.startsWith('98')) return "Must start with 98";
+                        if (v.length != 10) return "Must be 10 digits";
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    _isLoading 
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(onPressed: _sendOTP, child: const Text("Send OTP")),
+                  ] else ...[
+                    // Step 2: OTP
+                    Text(
+                      "Enter 6-digit OTP sent to ${_phoneController.text}",
+                      style: GoogleFonts.mukta(color: AppTheme.grey),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _otpController,
+                      keyboardType: TextInputType.number,
+                      maxLength: 6,
+                      decoration: const InputDecoration(
+                        labelText: "OTP Code",
+                        prefixIcon: Icon(Icons.lock_clock_outlined),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    _isLoading 
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(onPressed: _verifyOTP, child: const Text("Verify & Login")),
+                    TextButton(
+                      onPressed: () => setState(() => _otpSent = false),
+                      child: const Text("Change Phone Number"),
+                    ),
+                  ],
+
+                  const SizedBox(height: 40),
+                  Text(l.madeForNepal, style: GoogleFonts.mukta(fontSize: 12, color: AppTheme.grey)),
                 ],
               ),
             ),
@@ -298,3 +229,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

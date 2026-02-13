@@ -119,4 +119,91 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get userDemo => 'प्रयोगकर्ता डेमो लगइन';
+
+  @override
+  String get dashboard => 'ड्यासबोर्ड';
+
+  @override
+  String get bookings => 'बुकिङहरू';
+
+  @override
+  String get wallet => 'वालेट';
+
+  @override
+  String get tasksDone => 'सम्पन्न कार्यहरू';
+
+  @override
+  String get jobRequests => 'कार्य अनुरोधहरू';
+
+  @override
+  String get servicesYouNeed => 'तपाईंलाई चाहिने सेवाहरू';
+
+  @override
+  String get activeJobs => 'सक्रिय कार्यहरू';
+
+  @override
+  String get upcomingBookings => 'आगामी बुकिङहरू';
+
+  @override
+  String get noUpcomingBookings => 'कुनै आगामी बुकिङ छैन';
+
+  @override
+  String get completed => 'सम्पन्न';
+
+  @override
+  String get rating => 'रेटिङ';
+
+  @override
+  String get earned => 'कमाएको';
+
+  @override
+  String get plumber => 'प्लम्बर';
+
+  @override
+  String get electrician => 'इलेक्ट्रीशियन';
+
+  @override
+  String get tutor => 'ट्यूटर';
+
+  @override
+  String get painter => 'पेंटर';
+
+  @override
+  String get commandCenter => 'कमान्ड सेन्टर';
+
+  @override
+  String get govPortal => 'सरकारी पोर्टल';
+
+  @override
+  String get pending => 'पेन्डिङ';
+
+  @override
+  String get coreSystemsManagement => 'कोर प्रणाली व्यवस्थापन';
+
+  @override
+  String get communityInfrastructure => 'समुदाय र पूर्वाधार';
+
+  @override
+  String get systemAdministration => 'प्रणाली प्रशासन';
+
+  @override
+  String get verifyProviders => 'प्रदायकहरू प्रमाणित गर्नुहोस्';
+
+  @override
+  String get taskOverview => 'कार्य सिंहावलोकन';
+
+  @override
+  String get userBase => 'प्रयोगकर्ता आधार';
+
+  @override
+  String get complaints => 'गुनासोहरू';
+
+  @override
+  String get trainingCenter => 'तालिम केन्द्र';
+
+  @override
+  String get announcements => 'घोषणा';
+
+  @override
+  String get economicAnalytics => 'आर्थिक विश्लेषण';
 }

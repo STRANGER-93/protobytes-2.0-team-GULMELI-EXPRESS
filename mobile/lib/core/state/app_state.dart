@@ -1,57 +1,61 @@
 import 'package:flutter/material.dart';
 import '../models/user_role.dart';
-import '../data/mock_data.dart';
+import '../api_client.dart';
 
-/// Centralized app state — manages the current user and role.
-/// Wrap your MaterialApp with AppStateProvider to access anywhere.
-class AppStateProvider extends StatefulWidget {
-  final Widget Function(AppUser? user) builder;
-
-  const AppStateProvider({super.key, required this.builder});
-
-  @override
-  State<AppStateProvider> createState() => AppStateProviderState();
-
-  static AppStateProviderState of(BuildContext context) {
-    final state = context.findAncestorStateOfType<AppStateProviderState>();
-    assert(state != null, 'AppStateProvider not found in widget tree');
-    return state!;
-  }
-}
-
-class AppStateProviderState extends State<AppStateProvider> {
+class AppState extends ChangeNotifier {
   AppUser? _currentUser;
-  bool _isProviderMode = false; // "Work" mode
+  bool _isProviderMode = false;
 
   AppUser? get currentUser => _currentUser;
-  bool get isLoggedIn => _currentUser != null;
+  bool get isProviderMode => _isProviderMode;
+  bool get isAuthenticated => _currentUser != null;
+
   bool get isCitizen => _currentUser?.role == UserRole.citizen;
   bool get isGovernment => _currentUser?.role == UserRole.government;
-  bool get isProviderMode => _isProviderMode;
+
+  void setRealUser(AppUser user) {
+    _currentUser = user;
+    notifyListeners();
+  }
 
   void loginAs(UserRole role) {
-    setState(() {
-      _currentUser = role == UserRole.citizen
-          ? MockData.citizenUser
-          : MockData.governmentUser;
-      // Reset mode on login
-      _isProviderMode = false;
-    });
+    // Legacy support for demo buttons
+    _currentUser = AppUser(
+      id: "demo",
+      name: role == UserRole.citizen ? "Demo Citizen" : "Gov Admin",
+      phone: role == UserRole.citizen ? "9841001122" : "9841003344",
+      role: role,
+      location: "Bagmati, Kathmandu",
+      walletBalance: 1500,
+      email: "demo@example.com",
+    );
+    notifyListeners();
   }
 
   void logout() {
-    setState(() {
-      _currentUser = null;
-      _isProviderMode = false;
-    });
+    _currentUser = null;
+    _isProviderMode = false;
+    ApiClient().setToken(null);
+    notifyListeners();
   }
 
   void toggleProviderMode() {
-    setState(() {
+    if (isCitizen) {
       _isProviderMode = !_isProviderMode;
-    });
+      notifyListeners();
+    }
   }
+}
 
-  @override
-  Widget build(BuildContext context) => widget.builder(_currentUser);
+class AppStateProvider extends InheritedNotifier<AppState> {
+  const AppStateProvider({
+    super.key,
+    required AppState super.notifier,
+    required super.child,
+  });
+
+  static AppState of(BuildContext context) {
+    final provider = context.dependOnInheritedWidgetOfExactType<AppStateProvider>();
+    return provider!.notifier!;
+  }
 }

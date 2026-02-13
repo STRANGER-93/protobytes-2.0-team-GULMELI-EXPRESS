@@ -5,6 +5,7 @@ enum UserRole { citizen, government }
 class AppUser {
   final String id;
   final String name;
+  final String phone;
   final UserRole role;
   final String location;
   final double walletBalance;
@@ -13,12 +14,38 @@ class AppUser {
   const AppUser({
     required this.id,
     required this.name,
+    required this.phone,
     required this.role,
     required this.location,
     this.walletBalance = 0,
     this.email = '',
   });
+
+  factory AppUser.fromJson(Map<String, dynamic> json) {
+    // Backend verify-otp returns {access, refresh, user: {...}}
+    // Extract user data from nested key if present
+    final userData = json['user'] as Map<String, dynamic>? ?? json;
+
+    // Determine role
+    UserRole role = UserRole.citizen;
+    if (userData['role'] == 'municipality_admin' || userData['role'] == 'government') {
+      role = UserRole.government;
+    }
+
+    return AppUser(
+      id: userData['id']?.toString() ?? '',
+      name: userData['name'] ?? '',
+      phone: userData['phone'] ?? '',
+      role: role,
+      location: userData['municipality_detail'] != null
+          ? (userData['municipality_detail']['name'] ?? 'Unknown')
+          : 'Unknown',
+      walletBalance: double.tryParse(userData['wallet_balance']?.toString() ?? '0') ?? 0,
+      email: userData['email'] ?? '',
+    );
+  }
 }
+
 
 /// Data models used across the app.
 

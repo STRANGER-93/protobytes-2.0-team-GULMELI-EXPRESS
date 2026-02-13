@@ -2,40 +2,144 @@
   "@@locale": "ne",
 
   "namaste": "नमस्ते!",
+  "@namaste": { "description": "Greeting on login screen" },
+
   "welcomeJanSawa": "जनसेवामा स्वागत छ",
+  "@welcomeJanSawa": { "description": "Subtitle on login screen" },
+
   "username": "प्रयोगकर्ता नाम",
+  "@username": { "description": "Username field label" },
+
   "usernameHint": "आफ्नो प्रयोगकर्ता नाम लेख्नुहोस्",
+  "@usernameHint": { "description": "Username field hint" },
+
   "usernameRequired": "प्रयोगकर्ता नाम आवश्यक छ",
+  "@usernameRequired": { "description": "Username validation error" },
+
   "password": "पासवर्ड",
+  "@password": { "description": "Password field label" },
+
   "passwordHint": "आफ्नो पासवर्ड लेख्नुहोस्",
+  "@passwordHint": { "description": "Password field hint" },
+
   "passwordRequired": "पासवर्ड आवश्यक छ",
+  "@passwordRequired": { "description": "Password validation error" },
+
   "passwordMin4": "पासवर्ड कम्तिमा ४ अक्षरको हुनुपर्छ",
+  "@passwordMin4": { "description": "Password min length error" },
+
   "forgotPassword": "पासवर्ड बिर्सनुभयो?",
+  "@forgotPassword": { "description": "Forgot password link" },
+
   "login": "लगइन गर्नुहोस्",
+  "@login": { "description": "Login button" },
+
   "loginFailed": "लगइन असफल भयो। पुन: प्रयास गर्नुहोस्।",
+  "@loginFailed": { "description": "Login failure snackbar" },
+
   "or": "वा",
+  "@or": { "description": "Divider text" },
+
   "createAccount": "नयाँ खाता बनाउनुहोस्",
+  "@createAccount": { "description": "Create account button on login" },
+
   "madeForNepal": "नेपालको लागि निर्मित 🇳🇵",
+  "@madeForNepal": { "description": "Footer text" },
+
   "createAccountTitle": "नयाँ खाता बनाउनुहोस्",
+  "@createAccountTitle": { "description": "Signup screen title" },
+
   "joinJanSawa": "जनसेवामा सामेल हुनुहोस्",
+  "@joinJanSawa": { "description": "Signup screen subtitle" },
+
   "fullName": "पूरा नाम",
+  "@fullName": { "description": "Full name field label" },
+
   "fullNameHint": "आफ्नो पूरा नाम लेख्नुहोस्",
+  "@fullNameHint": { "description": "Full name field hint" },
+
   "fullNameRequired": "पूरा नाम आवश्यक छ",
+  "@fullNameRequired": { "description": "Full name validation error" },
+
   "email": "इमेल",
+  "@email": { "description": "Email field label" },
+
   "emailRequired": "इमेल आवश्यक छ",
+  "@emailRequired": { "description": "Email validation error" },
+
   "emailInvalid": "कृपया सही इमेल लेख्नुहोस्",
+  "@emailInvalid": { "description": "Email format validation error" },
+
   "usernameChoose": "आफ्नो प्रयोगकर्ता नाम छान्नुहोस्",
+  "@usernameChoose": { "description": "Username hint on signup" },
+
   "usernameMin3": "कम्तिमा ३ अक्षर आवश्यक छ",
+  "@usernameMin3": { "description": "Username min length error" },
+
   "passwordMin6Hint": "कम्तिमा ६ अक्षर",
+  "@passwordMin6Hint": { "description": "Password hint on signup" },
+
   "passwordMin6": "पासवर्ड कम्तिमा ६ अक्षरको हुनुपर्छ",
+  "@passwordMin6": { "description": "Password min 6 error" },
+
   "confirmPassword": "पासवर्ड पुष्टि गर्नुहोस्",
+  "@confirmPassword": { "description": "Confirm password label" },
+
   "confirmPasswordHint": "पासवर्ड फेरि लेख्नुहोस्",
+  "@confirmPasswordHint": { "description": "Confirm password hint" },
+
   "confirmPasswordRequired": "पासवर्ड पुष्टि आवश्यक छ",
+  "@confirmPasswordRequired": { "description": "Confirm password error" },
+
   "passwordMismatch": "पासवर्ड मेल खाएन",
+  "@passwordMismatch": { "description": "Password mismatch error" },
+
   "register": "दर्ता गर्नुहोस्",
+  "@register": { "description": "Register button" },
+
   "registerSuccess": "खाता सफलतापूर्वक बनाइयो! कृपया लगइन गर्नुहोस्।",
+  "@registerSuccess": { "description": "Registration success snackbar" },
+
   "registerFailed": "दर्ता असफल भयो। पुन: प्रयास गर्नुहोस्।",
+  "@registerFailed": { "description": "Registration failure snackbar" },
+
   "alreadyHaveAccount": "पहिले नै खाता छ? लगइन गर्नुहोस्",
+  "@alreadyHaveAccount": { "description": "Back to login button on signup" },
+
   "partnerDemo": "पार्टनर डेमो लगइन",
-  "userDemo": "प्रयोगकर्ता डेमो लगइन"
+  "@partnerDemo": { "description": "Demo login button for partners" },
+
+  "userDemo": "प्रयोगकर्ता डेमो लगइन",
+  "@userDemo": { "description": "Demo login button for users" },
+
+  "dashboard": "ड्यासबोर्ड",
+  "bookings": "बुकिङहरू",
+  "wallet": "वालेट",
+  "tasksDone": "सम्पन्न कार्यहरू",
+  "jobRequests": "कार्य अनुरोधहरू",
+  "servicesYouNeed": "तपाईंलाई चाहिने सेवाहरू",
+  "activeJobs": "सक्रिय कार्यहरू",
+  "upcomingBookings": "आगामी बुकिङहरू",
+  "noUpcomingBookings": "कुनै आगामी बुकिङ छैन",
+  "completed": "सम्पन्न",
+  "rating": "रेटिङ",
+  "earned": "कमाएको",
+  "plumber": "प्लम्बर",
+  "electrician": "इलेक्ट्रीशियन",
+  "tutor": "ट्यूटर",
+  "painter": "पेंटर",
+
+  "commandCenter": "कमान्ड सेन्टर",
+  "govPortal": "सरकारी पोर्टल",
+  "pending": "पेन्डिङ",
+  "coreSystemsManagement": "कोर प्रणाली व्यवस्थापन",
+  "communityInfrastructure": "समुदाय र पूर्वाधार",
+  "systemAdministration": "प्रणाली प्रशासन",
+  "verifyProviders": "प्रदायकहरू प्रमाणित गर्नुहोस्",
+  "taskOverview": "कार्य सिंहावलोकन",
+  "userBase": "प्रयोगकर्ता आधार",
+  "complaints": "गुनासोहरू",
+  "trainingCenter": "तालिम केन्द्र",
+  "announcements": "घोषणा",
+  "economicAnalytics": "आर्थिक विश्लेषण"
 }

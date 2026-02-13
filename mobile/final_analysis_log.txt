@@ -1,5 +1,0 @@
-Analyzing mobile...                                             
-
-  error - The argument type 'WidgetStateProperty<Color>' can't be assigned to the parameter type 'Color?'.  - lib\features\citizen\screens\citizen_profile_screen.dart:164:45 - argument_type_not_assignable
-
-1 issue found. (ran in 1.5s)

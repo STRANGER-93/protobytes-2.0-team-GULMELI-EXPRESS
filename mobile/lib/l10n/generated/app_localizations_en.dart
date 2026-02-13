@@ -118,4 +118,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get userDemo => 'User Demo Login';
+
+  @override
+  String get dashboard => 'Dashboard';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get wallet => 'Wallet';
+
+  @override
+  String get tasksDone => 'Tasks Done';
+
+  @override
+  String get jobRequests => 'Job Requests';
+
+  @override
+  String get servicesYouNeed => 'Services you need';
+
+  @override
+  String get activeJobs => 'Active Jobs';
+
+  @override
+  String get upcomingBookings => 'Upcoming Bookings';
+
+  @override
+  String get noUpcomingBookings => 'No upcoming bookings';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get earned => 'Earned';
+
+  @override
+  String get plumber => 'Plumber';
+
+  @override
+  String get electrician => 'Electrician';
+
+  @override
+  String get tutor => 'Tutor';
+
+  @override
+  String get painter => 'Painter';
+
+  @override
+  String get commandCenter => 'COMMAND CENTER';
+
+  @override
+  String get govPortal => 'Gov Portal';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get coreSystemsManagement => 'Core Systems Management';
+
+  @override
+  String get communityInfrastructure => 'Community & Infrastructure';
+
+  @override
+  String get systemAdministration => 'System Administration';
+
+  @override
+  String get verifyProviders => 'Verify Providers';
+
+  @override
+  String get taskOverview => 'Task Overview';
+
+  @override
+  String get userBase => 'User Base';
+
+  @override
+  String get complaints => 'Complaints';
+
+  @override
+  String get trainingCenter => 'Training Center';
+
+  @override
+  String get announcements => 'Announcements';
+
+  @override
+  String get economicAnalytics => 'Economic Analytics';
 }

@@ -1,222 +1,237 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/mock_data.dart';
+import '../../../core/services/provider_service.dart';
+import '../../../core/models/api_models.dart' as api;
 import '../../../shared/theme/app_theme.dart';
 
 class CitizenProviderListScreen extends StatefulWidget {
   const CitizenProviderListScreen({super.key});
 
   @override
-  State<CitizenProviderListScreen> createState() =>
-      _CitizenProviderListScreenState();
+  State<CitizenProviderListScreen> createState() => _CitizenProviderListScreenState();
 }
 
-class _CitizenProviderListScreenState extends State<CitizenProviderListScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
+  final ProviderService _providerService = ProviderService();
+  final _searchController = TextEditingController();
+  
+  List<api.ProviderProfile> _providers = [];
+  bool _isLoading = true;
+  String? _selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
-    _controller.forward();
+    _fetchProviders();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _fetchProviders() async {
+    setState(() => _isLoading = true);
+    final results = await _providerService.getProviders(
+      search: _searchController.text.isEmpty ? null : _searchController.text,
+      service: _selectedCategory,
+    );
+    setState(() {
+      _providers = results;
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final providers = MockData.providers.where((p) => p.isApproved).toList();
-
     return Scaffold(
       backgroundColor: AppTheme.offWhite,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         slivers: [
           SliverAppBar(
-            expandedHeight: 120.0,
-            floating: false,
+            expandedHeight: 180.0,
+            floating: true,
             pinned: true,
-            backgroundColor: AppTheme.crimson,
             elevation: 0,
-            automaticallyImplyLeading: false,
+            backgroundColor: AppTheme.deepBlue,
             flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: const Text(
-                "Service Providers",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
               background: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [AppTheme.crimson, AppTheme.deepBlue],
+                    colors: [AppTheme.deepBlue, AppTheme.crimson],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
+                  child: TextField(
+                    controller: _searchController,
+                    onSubmitted: (_) => _fetchProviders(),
+                    decoration: InputDecoration(
+                      hintText: "Search for professionals...",
+                      prefixIcon: const Icon(Icons.search, color: AppTheme.deepBlue),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(20),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final p = providers[index];
-                  // Staggered Animation
-                  final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: _controller,
-                      curve: Interval(
-                        (index / providers.length) * 0.5,
-                        1.0,
-                        curve: Curves.easeOut,
-                      ),
-                    ),
-                  );
-
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0, 0.2),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              '/citizen/provider-detail',
-                              arguments: p.id,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          AppTheme.crimson.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        p.name[0],
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: AppTheme.crimson,
-                                            fontSize: 24),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(p.name,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: AppTheme.darkText)),
-                                        const SizedBox(height: 6),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.build_circle_outlined,
-                                                size: 14,
-                                                color: AppTheme.grey),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              p.service,
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  color: AppTheme.grey,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            Icon(Icons.location_on_outlined,
-                                                size: 14,
-                                                color: AppTheme.grey),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              p.location,
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  color: AppTheme.grey,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.amber.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.star_rounded,
-                                            color: Colors.amber, size: 18),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          "${p.rating}",
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                              color: Colors.amber),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                childCount: providers.length,
+              centerTitle: true,
+              title: const Text(
+                "Find Professionals",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
               ),
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
+          
+          // Category Selector
+          SliverToBoxAdapter(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              child: Row(
+                children: [
+                   _categoryChip("All", null),
+                   _categoryChip("Plumbing", "plumbing"),
+                   _categoryChip("Electric", "electric"),
+                   _categoryChip("Health", "health"),
+                   _categoryChip("Legal", "legal"),
+                ],
+              ),
+            ),
+          ),
+
+          if (_isLoading)
+            const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+          else if (_providers.isEmpty)
+            _buildEmptyState()
+          else
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _providerCard(_providers[index]),
+                  childCount: _providers.length,
+                ),
+              ),
+            ),
+          
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+    );
+  }
+
+  Widget _categoryChip(String label, String? value) {
+    final isSelected = _selectedCategory == value;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        label: Text(label),
+        selected: isSelected,
+        onSelected: (val) {
+          setState(() => _selectedCategory = val ? value : null);
+          _fetchProviders();
+        },
+        selectedColor: AppTheme.deepBlue,
+        checkmarkColor: Colors.white,
+        labelStyle: TextStyle(
+          color: isSelected ? Colors.white : AppTheme.darkText,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: isSelected ? 4 : 0,
+      ),
+    );
+  }
+
+  Widget _providerCard(api.ProviderProfile provider) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(
+          context,
+          '/citizen/provider-detail',
+          arguments: provider.id.toString(),
+        ),
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Hero(
+                tag: 'provider_${provider.id}',
+                child: CircleAvatar(
+                  radius: 35,
+                  backgroundColor: AppTheme.offWhite,
+                  child: Text(
+                    provider.name.isNotEmpty ? provider.name[0] : '?', 
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.deepBlue)
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            provider.name, 
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (provider.isVerified)
+                          const Padding(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Icon(Icons.verified, color: Colors.blue, size: 16),
+                          ),
+                      ],
+                    ),
+                    Text(provider.service, style: const TextStyle(color: AppTheme.grey, fontSize: 14)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.star_rounded, color: Colors.amber, size: 18),
+                        Text(" ${provider.avgRating} ", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text("(${provider.jobsCompleted} jobs)", style: const TextStyle(color: AppTheme.grey, fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return SliverFillRemaining(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off_rounded, size: 64, color: Colors.grey.shade300),
+          const SizedBox(height: 16),
+          const Text("No professionals found", style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold)),
+          const Text("Try changing your search or filters", style: TextStyle(color: AppTheme.grey, fontSize: 12)),
         ],
       ),
     );

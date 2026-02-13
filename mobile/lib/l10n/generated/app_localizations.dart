@@ -319,6 +319,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User Demo Login'**
   String get userDemo;
+
+  /// No description provided for @dashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboard;
+
+  /// No description provided for @bookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @tasksDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks Done'**
+  String get tasksDone;
+
+  /// No description provided for @jobRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Requests'**
+  String get jobRequests;
+
+  /// No description provided for @servicesYouNeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Services you need'**
+  String get servicesYouNeed;
+
+  /// No description provided for @activeJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Jobs'**
+  String get activeJobs;
+
+  /// No description provided for @upcomingBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Bookings'**
+  String get upcomingBookings;
+
+  /// No description provided for @noUpcomingBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming bookings'**
+  String get noUpcomingBookings;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @earned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get earned;
+
+  /// No description provided for @plumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumber'**
+  String get plumber;
+
+  /// No description provided for @electrician.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrician'**
+  String get electrician;
+
+  /// No description provided for @tutor.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutor'**
+  String get tutor;
+
+  /// No description provided for @painter.
+  ///
+  /// In en, this message translates to:
+  /// **'Painter'**
+  String get painter;
+
+  /// No description provided for @commandCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'COMMAND CENTER'**
+  String get commandCenter;
+
+  /// No description provided for @govPortal.
+  ///
+  /// In en, this message translates to:
+  /// **'Gov Portal'**
+  String get govPortal;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @coreSystemsManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Core Systems Management'**
+  String get coreSystemsManagement;
+
+  /// No description provided for @communityInfrastructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Community & Infrastructure'**
+  String get communityInfrastructure;
+
+  /// No description provided for @systemAdministration.
+  ///
+  /// In en, this message translates to:
+  /// **'System Administration'**
+  String get systemAdministration;
+
+  /// No description provided for @verifyProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Providers'**
+  String get verifyProviders;
+
+  /// No description provided for @taskOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Overview'**
+  String get taskOverview;
+
+  /// No description provided for @userBase.
+  ///
+  /// In en, this message translates to:
+  /// **'User Base'**
+  String get userBase;
+
+  /// No description provided for @complaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Complaints'**
+  String get complaints;
+
+  /// No description provided for @trainingCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Training Center'**
+  String get trainingCenter;
+
+  /// No description provided for @announcements.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get announcements;
+
+  /// No description provided for @economicAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Economic Analytics'**
+  String get economicAnalytics;
 }
 
 class _AppLocalizationsDelegate

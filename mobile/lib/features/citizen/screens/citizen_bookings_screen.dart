@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/mock_data.dart';
-import '../../../core/state/app_state.dart';
+import '../../../core/services/booking_service.dart';
+import '../../../core/models/api_models.dart' as api;
 import '../../../shared/theme/app_theme.dart';
 
 class CitizenBookingsScreen extends StatefulWidget {
@@ -10,232 +10,189 @@ class CitizenBookingsScreen extends StatefulWidget {
   State<CitizenBookingsScreen> createState() => _CitizenBookingsScreenState();
 }
 
-class _CitizenBookingsScreenState extends State<CitizenBookingsScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
+  final BookingService _bookingService = BookingService();
+  List<api.Booking> _bookings = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
-    _controller.forward();
+    _loadBookings();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Future<void> _loadBookings() async {
+    setState(() => _isLoading = true);
+    final results = await _bookingService.getBookings();
+    setState(() {
+      _bookings = results;
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = AppStateProvider.of(context).currentUser!;
-    final myBookings =
-        MockData.bookings.where((b) => b.citizenName == user.name).toList();
-
     return Scaffold(
       backgroundColor: AppTheme.offWhite,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 120.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: AppTheme.success,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: const Text(
-                "My Bookings",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+      body: RefreshIndicator(
+        onRefresh: _loadBookings,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 120.0,
+              floating: true,
+              pinned: true,
+              backgroundColor: AppTheme.deepBlue,
+              elevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: const Text(
+                  "My Bookings",
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppTheme.success, Colors.teal],
+                background: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppTheme.deepBlue, AppTheme.crimson],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          if (myBookings.isEmpty)
-            SliverFillRemaining(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.calendar_today_rounded,
-                          size: 48, color: Colors.grey.shade400),
-                    ),
-                    const SizedBox(height: 24),
-                    Text("No bookings yet",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600)),
-                    const SizedBox(height: 8),
-                    Text("Your scheduled services will appear here",
-                        style: TextStyle(
-                            fontSize: 14, color: Colors.grey.shade500)),
-                  ],
+            
+            if (_isLoading)
+              const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
+            else if (_bookings.isEmpty)
+              _buildEmptyState()
+            else
+              SliverPadding(
+                padding: const EdgeInsets.all(20),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _bookingCard(_bookings[index]),
+                    childCount: _bookings.length,
+                  ),
                 ),
               ),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.all(20),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final b = myBookings[index];
-                    final statusColor = _statusColor(b.status);
-                    
-                    final animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: _controller,
-                        curve: Interval(
-                          (index / myBookings.length) * 0.5,
-                          1.0,
-                          curve: Curves.easeOut,
-                        ),
-                      ),
-                    );
+            
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          ],
+        ),
+      ),
+    );
+  }
 
-                    return FadeTransition(
-                      opacity: animation,
-                      child: SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0, 0.2),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.04),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 56,
-                                  height: 56,
-                                  decoration: BoxDecoration(
-                                    color: statusColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Icon(Icons.calendar_month_rounded,
-                                      color: statusColor, size: 28),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(b.serviceName,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: AppTheme.darkText)),
-                                      const SizedBox(height: 4),
-                                      Text(b.providerName,
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              color: AppTheme.grey,
-                                              fontWeight: FontWeight.w500)),
-                                      const SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          Icon(Icons.access_time_rounded,
-                                              size: 14, color: AppTheme.grey),
-                                          const SizedBox(width: 4),
-                                          Text(b.date,
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  color: AppTheme.grey)),
-                                          const SizedBox(width: 12),
-                                          Icon(Icons.payments_outlined,
-                                              size: 14, color: AppTheme.grey),
-                                          const SizedBox(width: 4),
-                                          Text("Rs. ${b.amount.toInt()}",
-                                              style: const TextStyle(
-                                                  fontSize: 13,
-                                                  color: AppTheme.grey)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: statusColor.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                        color: statusColor.withValues(alpha: 0.2)),
-                                  ),
-                                  child: Text(
-                                    b.status.toUpperCase(),
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 0.5,
-                                        color: statusColor),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+  Widget _bookingCard(api.Booking booking) {
+    final statusColor = _getStatusColor(booking.status);
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(Icons.handyman_rounded, color: statusColor, size: 28),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    booking.providerName,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppTheme.darkText),
+                  ),
+                  Text(
+                    booking.service,
+                    style: const TextStyle(fontSize: 14, color: AppTheme.grey),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_rounded, size: 14, color: AppTheme.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatDate(booking.scheduledTime),
+                        style: const TextStyle(fontSize: 12, color: AppTheme.grey),
                       ),
-                    );
-                  },
-                  childCount: myBookings.length,
-                ),
+                      const SizedBox(width: 16),
+                      Text(
+                        "Rs. ${booking.amount.toInt()}",
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppTheme.deepBlue),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                booking.status.toUpperCase(),
+                style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return SliverFillRemaining(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.calendar_today_rounded, size: 64, color: Colors.grey.shade300),
+          const SizedBox(height: 16),
+          const Text("No bookings found", style: TextStyle(color: AppTheme.grey, fontWeight: FontWeight.bold)),
+          const Text("Your professional services will appear here", style: TextStyle(color: AppTheme.grey, fontSize: 12)),
         ],
       ),
     );
   }
 
-  Color _statusColor(String status) {
-    switch (status) {
-      case 'confirmed':
-        return AppTheme.success;
-      case 'pending':
-        return AppTheme.warning;
-      case 'completed':
-        return AppTheme.deepBlue;
-      case 'cancelled':
-        return AppTheme.crimson;
-      default:
-        return AppTheme.grey;
+  String _formatDate(String isoString) {
+    try {
+      final date = DateTime.parse(isoString);
+      return "${date.day}/${date.month}/${date.year}";
+    } catch (e) {
+      return isoString;
+    }
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending': return Colors.orange;
+      case 'confirmed': return AppTheme.success;
+      case 'completed': return AppTheme.deepBlue;
+      case 'cancelled': return AppTheme.crimson;
+      default: return AppTheme.grey;
     }
   }
 }

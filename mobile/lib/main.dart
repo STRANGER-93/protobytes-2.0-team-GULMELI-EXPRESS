@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppStateProvider(
-      builder: (_) => LanguageProvider(
+      notifier: AppState(),
+      child: LanguageProvider(
         builder: (locale) => Builder(
           builder: (ctx) => MaterialApp(
             title: 'JanSawa',

@@ -18,7 +18,7 @@ class LanguageProvider extends StatefulWidget {
 }
 
 class LanguageProviderState extends State<LanguageProvider> {
-  Locale _locale = const Locale('ne');
+  Locale _locale = const Locale('en');
 
   Locale get locale => _locale;
   bool get isNepali => _locale.languageCode == 'ne';
