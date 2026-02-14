@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _otpSent = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OTP sent successfully (Dev: 123456)")),
+          const SnackBar(content: Text("OTP sent successfully")),
         );
       }
     } catch (e) {
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return "Enter phone number";
-                        if (!v.startsWith('98')) return "Must start with 98";
+                        if (!RegExp(r'^9[5-8]').hasMatch(v)) return "Must start with 95-98";
                         if (v.length != 10) return "Must be 10 digits";
                         return null;
                       },

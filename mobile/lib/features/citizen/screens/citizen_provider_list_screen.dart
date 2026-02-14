@@ -25,12 +25,19 @@ class _CitizenProviderListScreenState extends State<CitizenProviderListScreen> {
     _fetchProviders();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchProviders() async {
     setState(() => _isLoading = true);
     final results = await _providerService.getProviders(
       search: _searchController.text.isEmpty ? null : _searchController.text,
       skill: _selectedCategory,
     );
+    if (!mounted) return;
     setState(() {
       _providers = results;
       _isLoading = false;

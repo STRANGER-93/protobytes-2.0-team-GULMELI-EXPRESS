@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show File, Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -87,12 +88,17 @@ class ApiClient {
         url,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"refresh": _refreshToken}),
-      );
+      ).timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         final newAccess = body['access'] as String?;
+        final newRefresh = body['refresh'] as String?;
         if (newAccess != null) {
           setToken(newAccess);
+          // Save rotated refresh token if provided
+          if (newRefresh != null) {
+            setRefreshToken(newRefresh);
+          }
           return true;
         }
       }
@@ -103,9 +109,9 @@ class ApiClient {
   Future<Map<String, dynamic>> get(String endpoint) async {
     final url = Uri.parse("$baseUrl$endpoint");
     try {
-      var response = await http.get(url, headers: _headers());
+      var response = await http.get(url, headers: _headers()).timeout(const Duration(seconds: 30));
       if (response.statusCode == 401 && await _tryRefreshToken()) {
-        response = await http.get(url, headers: _headers());
+        response = await http.get(url, headers: _headers()).timeout(const Duration(seconds: 30));
       }
       return _processResponse(response);
     } catch (e) {
@@ -123,13 +129,13 @@ class ApiClient {
         url,
         headers: _headers(),
         body: jsonEncode(data),
-      );
+      ).timeout(const Duration(seconds: 30));
       if (response.statusCode == 401 && await _tryRefreshToken()) {
         response = await http.post(
           url,
           headers: _headers(),
           body: jsonEncode(data),
-        );
+        ).timeout(const Duration(seconds: 30));
       }
       return _processResponse(response);
     } catch (e) {
@@ -147,13 +153,13 @@ class ApiClient {
         url,
         headers: _headers(),
         body: jsonEncode(data),
-      );
+      ).timeout(const Duration(seconds: 30));
       if (response.statusCode == 401 && await _tryRefreshToken()) {
         response = await http.patch(
           url,
           headers: _headers(),
           body: jsonEncode(data),
-        );
+        ).timeout(const Duration(seconds: 30));
       }
       return _processResponse(response);
     } catch (e) {
@@ -171,13 +177,13 @@ class ApiClient {
         url,
         headers: _headers(),
         body: jsonEncode(data),
-      );
+      ).timeout(const Duration(seconds: 30));
       if (response.statusCode == 401 && await _tryRefreshToken()) {
         response = await http.put(
           url,
           headers: _headers(),
           body: jsonEncode(data),
-        );
+        ).timeout(const Duration(seconds: 30));
       }
       return _processResponse(response);
     } catch (e) {
@@ -188,9 +194,9 @@ class ApiClient {
   Future<Map<String, dynamic>> delete(String endpoint) async {
     final url = Uri.parse("$baseUrl$endpoint");
     try {
-      var response = await http.delete(url, headers: _headers());
+      var response = await http.delete(url, headers: _headers()).timeout(const Duration(seconds: 30));
       if (response.statusCode == 401 && await _tryRefreshToken()) {
-        response = await http.delete(url, headers: _headers());
+        response = await http.delete(url, headers: _headers()).timeout(const Duration(seconds: 30));
       }
       if (response.statusCode == 204) return {"success": true};
       return _processResponse(response);

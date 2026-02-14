@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_role.dart';
@@ -57,6 +58,11 @@ class AppState extends ChangeNotifier {
   }
 
   void loginAs(UserRole role) {
+    // Disable demo login bypass in production
+    if (!kDebugMode) {
+      debugPrint('loginAs() is disabled in release builds');
+      return;
+    }
     // Legacy support for demo buttons
     _currentUser = AppUser(
       id: "demo",

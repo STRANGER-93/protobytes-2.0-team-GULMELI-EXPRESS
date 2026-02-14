@@ -80,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
           _otpSent = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OTP sent successfully (Dev: 123456)")),
+          const SnackBar(content: Text("OTP sent successfully")),
         );
       }
     } catch (e) {
@@ -291,16 +291,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               setState(() => _selectedRole = UserRole.provider),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ChoiceChip(
-                          label: const Text("Gov"),
-                          selected: _selectedRole == UserRole.government,
-                          onSelected: (_) => setState(
-                            () => _selectedRole = UserRole.government,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -378,7 +368,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       validator: (v) {
                         if (v == null || v.isEmpty) return "Enter phone number";
-                        if (!v.startsWith('98')) return "Must start with 98";
+                        if (!RegExp(r'^9[5-8]').hasMatch(v)) return "Must start with 95-98";
                         if (v.length != 10) return "Must be 10 digits";
                         return null;
                       },

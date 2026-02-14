@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import '../../../core/api_client.dart';
 import '../../../core/models/user_role.dart';
 
@@ -11,7 +12,7 @@ class AuthService {
     try {
       await apiClient.post("/auth/send-otp/", {"phone": phone});
     } catch (e) {
-      print("Send OTP Error: $e");
+      debugPrint("Send OTP Error: $e");
       rethrow;
     }
   }
@@ -66,7 +67,7 @@ class AuthService {
       final res = await apiClient.get("/auth/profile/");
       return res;
     } catch (e) {
-      print("Get Profile Error: $e");
+      debugPrint("Get Profile Error: $e");
       return null;
     }
   }
@@ -80,7 +81,7 @@ class AuthService {
       final res = await apiClient.patch("/auth/profile/", body);
       return res;
     } catch (e) {
-      print("Update Profile Error: $e");
+      debugPrint("Update Profile Error: $e");
       return null;
     }
   }
@@ -94,7 +95,7 @@ class AuthService {
       );
       return res;
     } catch (e) {
-      print("Upload Photo Error: $e");
+      debugPrint("Upload Photo Error: $e");
       return null;
     }
   }
@@ -106,7 +107,7 @@ class AuthService {
       final List<dynamic> data = res is List ? res : res['results'] ?? [];
       return data.cast<Map<String, dynamic>>();
     } catch (e) {
-      print("Get Municipalities Error: $e");
+      debugPrint("Get Municipalities Error: $e");
       return [];
     }
   }

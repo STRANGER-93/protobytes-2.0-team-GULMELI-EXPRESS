@@ -24,6 +24,7 @@ class _CitizenBookingsScreenState extends State<CitizenBookingsScreen> {
   Future<void> _loadBookings() async {
     setState(() => _isLoading = true);
     final results = await _bookingService.getBookings();
+    if (!mounted) return;
     setState(() {
       _bookings = results;
       _isLoading = false;
